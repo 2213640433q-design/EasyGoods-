@@ -1,0 +1,10 @@
+{
+  "name": "generateStoreLink",
+  "version": "1.0.0",
+  "description": "生成门店扫码页面链接",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}
+

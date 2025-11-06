@@ -1,0 +1,12 @@
+{
+  "favorite": {
+    "on": "/static/icons/favorite-on.png",
+    "off": "/static/icons/favorite-off.png"
+  },
+  "like": {
+    "on": "/static/icons/like-on.png",
+    "off": "/static/icons/like-off.png"
+  }
+}
+
+

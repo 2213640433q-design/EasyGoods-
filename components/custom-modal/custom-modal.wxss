@@ -1,0 +1,19 @@
+/* 遮罩层 */
+.custom-modal-mask { position: fixed; top:0; right:0; bottom:0; left:0; z-index: 2000; background: rgba(0,0,0,.6); display:flex; justify-content:center; align-items:center; }
+/* 弹窗主体 */
+.custom-modal-content { width: 80%; max-width: 600rpx; background:#FFF; border-radius: 12px; overflow: hidden; }
+/* 标题 */
+.custom-modal-title { padding: 32rpx 32rpx 0; font-size: 34rpx; font-weight: 600; text-align:center; color:#1D1D1F; }
+/* 内容 */
+.custom-modal-body { padding: 32rpx; min-height: 80rpx; text-align:center; color:#333; font-size: 30rpx; }
+.modal-body-text { white-space: pre-wrap; display:block; }
+/* 分割线 */
+.custom-modal-split { height:1px; background:#EEE; }
+/* 底部按钮 */
+.custom-modal-footer { display:flex; height: 96rpx; line-height: 96rpx; }
+.custom-modal-btn { flex:1; text-align:center; font-size:34rpx; box-sizing:border-box; }
+.custom-modal-btn-split { width:1px; background:#EEE; }
+.custom-modal-cancel-btn { color:#000; opacity:.8; }
+.custom-modal-confirm-btn { color:#007aff; }
+
+

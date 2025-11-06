@@ -1,0 +1,47 @@
+{
+  "description": "租赁功能图标配置",
+  "version": "1.0.0",
+  "icons": [
+    {
+      "name": "address",
+      "filename": "address.png",
+      "title": "收货地址",
+      "color": "#667eea",
+      "gradient": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+      "keywords": ["地址", "定位", "位置", "收货"]
+    },
+    {
+      "name": "verify",
+      "filename": "verify.png",
+      "title": "实名认证",
+      "color": "#f093fb",
+      "gradient": "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
+      "keywords": ["认证", "身份", "验证", "实名"]
+    },
+    {
+      "name": "deposit",
+      "filename": "deposit.png",
+      "title": "我的押金",
+      "color": "#4facfe",
+      "gradient": "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
+      "keywords": ["押金", "钱", "资金", "余额"]
+    },
+    {
+      "name": "service",
+      "filename": "service.png",
+      "title": "在线客服",
+      "color": "#43e97b",
+      "gradient": "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)",
+      "keywords": ["客服", "服务", "咨询", "对话"]
+    }
+  ],
+  "specs": {
+    "size": "128x128px (recommended) or 48x48px (minimum)",
+    "format": "PNG with transparent background",
+    "iconColor": "Colorful (theme colors) or dark gray (#1D1D1F)",
+    "style": "Line icons or flat icons",
+    "strokeWidth": "2-3px (for line icons)",
+    "background": "No background needed (removed gradient backgrounds)"
+  }
+}
+

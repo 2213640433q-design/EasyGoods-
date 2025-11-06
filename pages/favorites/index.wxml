@@ -1,0 +1,44 @@
+<view class="page">
+  <view class="topbar" style="top: {{statusBarHeight}}px;">
+    <view class="nav-left" bindtap="goBack"><text class="back">‹</text></view>
+    <text class="title">我的收藏</text>
+    <view class="nav-right"></view>
+  </view>
+
+  <view class="filters" style="margin-top: calc({{statusBarHeight}}px + 44px);">
+    <view class="filter {{currentFilter==='all'?'active':''}}" data-key="all" bindtap="onFilterTap">全部</view>
+    <view class="filter {{currentFilter==='valid'?'active':''}}" data-key="valid" bindtap="onFilterTap">在售</view>
+    <view class="filters-spacer"></view>
+    <text class="manage-btn" bindtap="toggleManage">{{isManage ? '完成' : '管理'}}</text>
+  </view>
+
+  <view class="list">
+    <view class="item" wx:for="{{displayList}}" wx:key="id">
+      <view class="chk-wrap" wx:if="{{isManage}}">
+        <checkbox class="chk" checked="{{selectedIds[item.id]}}" data-id="{{item.id}}" bindchange="onSelectChange"/>
+      </view>
+      <view class="thumb-wrap">
+        <image class="thumb" src="{{item.image}}" mode="aspectFill" bindtap="onItemTap" data-id="{{item.id}}"/>
+        <view class="badge sold" wx:if="{{item.status!=='valid'}}">{{item.status==='sold'?'已卖出':'已下架'}}</view>
+      </view>
+      <view class="meta" bindtap="onItemTap" data-id="{{item.id}}">
+        <text class="title1">{{item.title}}</text>
+        <text class="rented-count">已租{{item.rentedCount || 0}}</text>
+        <view class="price-row">
+          <text class="currency">{{item.currency}}</text>
+          <text class="price">{{item.price}}</text>
+          <text class="unit" wx:if="{{item.type==='rent'}}">/天</text>
+        </view>
+      </view>
+      <image class="fav-icon-img" src="/static/icons/favorite-on.png" mode="aspectFit" bindtap="onUnfavorite" data-id="{{item.id}}"/>
+    </view>
+  </view>
+
+  <view class="manage-bar" wx:if="{{isManage}}" style="padding-bottom: calc(env(safe-area-inset-bottom) + 8px);">
+    <checkbox class="chk-all" checked="{{allChecked}}" bindchange="onToggleAll"/> 
+    <text class="all-text">全选</text>
+    <view class="delete-btn" bindtap="onBatchDelete">删除</view>
+  </view>
+</view>
+
+

@@ -1,0 +1,11 @@
+{
+  "name": "getOrderStats",
+  "version": "1.0.0",
+  "description": "获取订单统计数量",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}
+
+

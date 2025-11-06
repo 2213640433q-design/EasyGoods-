@@ -1,0 +1,29 @@
+<view class="page">
+  <view class="topbar" style="padding-top: {{statusBarHeight}}px;">
+    <view class="nav-left" bindtap="goBack"><text class="back">‹</text></view>
+    <text class="title">服务协议</text>
+    <view class="nav-right"></view>
+  </view>
+  <scroll-view scroll-y class="content">
+    <view class="section">
+      <text class="h1">一、总则</text>
+      <text class="p">为保障用户的合法权益并维护平台秩序，您在使用本平台服务前，应仔细阅读并充分理解本协议的全部内容。</text>
+    </view>
+    <view class="section">
+      <text class="h1">二、用户行为规范</text>
+      <text class="p">不得发布违法、侵权、虚假或误导性信息；不得恶意下单、刷单；在交易过程中应诚信沟通、按约履行。</text>
+    </view>
+    <view class="section">
+      <text class="h1">三、交易与纠纷处理</text>
+      <text class="p">平台提供撮合服务并建立基础保障机制。交易纠纷可通过平台客服协调处理，证据以聊天记录、订单记录等为准。</text>
+    </view>
+    <view class="section">
+      <text class="h1">四、其他</text>
+      <text class="p">平台有权根据业务发展对协议进行更新，并在页面公示。更新后继续使用视为同意修订内容。</text>
+    </view>
+    <view class="bottom-space"></view>
+  </scroll-view>
+</view>
+
+
+

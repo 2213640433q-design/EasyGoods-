@@ -1,0 +1,101 @@
+<!--index.wxml-->
+<view class="page-wrapper"
+      bindtouchstart="onPageTouchStart"
+      bindtouchmove="onPageTouchMove"
+      bindtouchend="onPageTouchEnd">
+<view class="page" style="transform: translateX({{pageSwipeOffset}}px); opacity: {{pageSwipeOpacity}}; transition: {{pageSwipeTransition}};">
+  <!-- 顶部：城市 -->
+  <view class="topbar" style="padding-top: {{statusBarHeight}}px;">
+    <view class="topbar-content" style="height: {{navBarHeight}}px;">
+      <view class="city" bindtap="onCityTap">{{cityName}} ▾</view>
+      <view class="title">租赁</view>
+      <view class="topbar-spacer"></view>
+    </view>
+  </view>
+
+  <!-- 城市下拉面板 -->
+  <view wx:if="{{cityPickerVisible}}" class="city-mask" bindtap="onCityMaskTap"></view>
+  <view wx:if="{{cityPickerVisible}}" class="city-panel" style="top: {{totalNavHeight}}px;">
+    <view class="city-item" wx:for="{{cities}}" wx:key="name" data-name="{{item}}" bindtap="onCitySelect">{{item}}</view>
+  </view>
+
+  <!-- 租赁内容 -->
+  <scroll-view scroll-y class="scroll-content" enable-back-to-top>
+    <!-- 搜索栏 -->
+    <view class="search-section">
+      <view class="search-container">
+        <view class="search-input">
+          <image class="search-icon" src="/static/icons/search.svg" mode="aspectFit"></image>
+          <input class="search-text" placeholder="搜索设备..." placeholder-style="color: #9CA3AF;" bindinput="onSearchInput" />
+        </view>
+      </view>
+    </view>
+
+    <!-- 主导航栏 - 1行5列 -->
+    <view class="main-nav-section">
+      <view class="main-nav-grid">
+        <view class="main-nav-item {{currentMainNav === index ? 'active' : ''}} {{item.disabled ? 'disabled' : ''}}"
+              wx:for="{{mainNavs}}" 
+              wx:key="id"
+              data-index="{{index}}"
+              bindtap="onMainNavTap">
+          <image class="main-nav-icon" src="{{item.icon}}" mode="aspectFit"/>
+          <text class="main-nav-name">{{item.name}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 子分类tab - 横向滑动（仅在非"全部"时显示） -->
+    <view class="sub-tabs-section" wx:if="{{showSubTabs}}">
+      <scroll-view class="sub-tabs-scroll" scroll-x scroll-with-animation>
+        <view class="sub-tabs-wrapper">
+          <view class="sub-tab {{currentSubTab === index ? 'active' : ''}}"
+                wx:for="{{currentSubTabs}}" 
+                wx:key="index"
+                data-index="{{index}}"
+                bindtap="onSubTabTap">
+            <text class="sub-tab-text">{{item}}</text>
+            <view wx:if="{{currentSubTab === index}}" class="sub-tab-indicator"></view>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+
+    <!-- 商品网格 -->
+    <view class="products-section">
+      <view class="products-grid">
+        <view wx:for="{{productList}}" wx:key="index" class="product-item" bindtap="onProductTap" data-item="{{item}}">
+          <view class="product-image-container">
+            <image class="product-image" src="{{item.images ? item.images[0] : item.image}}" mode="aspectFill"></image>
+          </view>
+          <view class="product-info">
+            <text class="product-name">{{item.name}}</text>
+            <view class="product-tags">
+              <text class="tag-main-category">{{item.mainCategory}}</text>
+              <text class="tag-sub-category">{{item.subCategory}}</text>
+            </view>
+            <view class="product-price">
+              <text class="price-symbol">¥</text>
+              <text class="price-number">{{item.price}}.0</text>
+              <text class="price-unit">/天</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 底部导航：首页和我的 -->
+  <view class="bottom-nav">
+    <view class="nav-item active" bindtap="onNavTap" data-page="index">
+      <image class="nav-icon-img" src="/static/tabbar/png/home-filled.png" mode="widthFix" />
+      <text class="nav-text">首页</text>
+    </view>
+    <view class="nav-item" bindtap="onNavTap" data-page="profile">
+      <image class="nav-icon-img" src="/static/tabbar/png/profile-outline.png" mode="widthFix" />
+      <text class="nav-text">我的</text>
+    </view>
+  </view>
+</view>
+</view>
+

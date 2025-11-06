@@ -1,0 +1,114 @@
+<view class="page">
+  <!-- 顶部导航栏 -->
+  <view class="topbar" style="padding-top: {{statusBarHeight}}px;">
+    <view class="topbar-content" style="height: {{navBarHeight}}px;">
+      <view class="nav-left" bindtap="goBack">
+        <text class="back-icon">‹</text>
+      </view>
+      <text class="title">编辑资料</text>
+      <view class="nav-right"></view>
+    </view>
+  </view>
+
+  <scroll-view scroll-y class="scroll-content" enable-back-to-top>
+    <!-- 基本信息 -->
+    <view class="section-header">
+      <text class="section-title">基本信息</text>
+    </view>
+    <view class="form-container">
+      <!-- 昵称 -->
+      <view class="form-item" bindtap="editNickname">
+        <text class="label">昵称</text>
+        <view class="value-container">
+          <text class="value">{{userInfo.nickname || '未设置'}}</text>
+          <text class="arrow">›</text>
+        </view>
+      </view>
+
+      <!-- 头像 -->
+      <view class="form-item" bindtap="editAvatar">
+        <text class="label">头像</text>
+        <view class="value-container">
+          <image class="avatar" src="{{userInfo.avatar || '/static/placeholder/a1.png'}}" mode="aspectFill"/>
+          <text class="arrow">›</text>
+        </view>
+      </view>
+
+      <!-- 性别 -->
+      <view class="form-item" bindtap="editGender">
+        <text class="label">性别</text>
+        <view class="value-container">
+          <text class="value">{{userInfo.gender || '未设置'}}</text>
+          <text class="arrow">›</text>
+        </view>
+      </view>
+
+      <!-- 生日 -->
+      <view class="form-item" bindtap="editBirthday">
+        <text class="label">生日</text>
+        <view class="value-container">
+          <text class="value">{{userInfo.birthday || '未设置'}}</text>
+          <text class="arrow">›</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 学校信息 -->
+    <view class="section-header">
+      <text class="section-title">学校信息</text>
+    </view>
+    <view class="form-container">
+      <!-- 院校名称 -->
+      <view class="form-item" bindtap="editSchool">
+        <text class="label">院校名称</text>
+        <view class="value-container">
+          <text class="value">{{userInfo.school || '未设置'}}</text>
+          <text class="arrow">›</text>
+        </view>
+      </view>
+
+      <!-- 城市 -->
+      <view class="form-item" bindtap="editCity">
+        <text class="label">城市</text>
+        <view class="value-container">
+          <text class="value">{{userInfo.city || '未设置'}}</text>
+          <text class="arrow">›</text>
+        </view>
+      </view>
+
+      <!-- 邮编 -->
+      <view class="form-item" bindtap="editPostcode">
+        <text class="label">邮编</text>
+        <view class="value-container">
+          <text class="value">{{userInfo.postcode || '未设置'}}</text>
+          <text class="arrow">›</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 联系方式 -->
+    <view class="section-header">
+      <text class="section-title">联系方式</text>
+    </view>
+    <view class="form-container">
+      <!-- 手机号 -->
+      <view class="form-item" bindtap="editPhone">
+        <text class="label">手机号</text>
+        <view class="value-container">
+          <text class="value">{{userInfo.phone || '未设置'}}</text>
+          <text class="arrow">›</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 退出登录按钮 -->
+    <view class="logout-container">
+      <button class="logout-btn" bindtap="onLogout">
+        退出登录
+      </button>
+    </view>
+
+    <!-- 底部占位 -->
+    <view class="bottom-placeholder"></view>
+  </scroll-view>
+</view>

@@ -1,0 +1,74 @@
+<view class="page">
+  <!-- 顶部导航栏 -->
+  <view class="topbar" style="padding-top: {{statusBarHeight}}px;">
+    <view class="nav-left" bindtap="goBack">
+      <text class="back-icon">‹</text>
+    </view>
+    <view class="nav-title">确认续租</view>
+    <view class="nav-right"></view>
+  </view>
+
+  <!-- 内容区域 -->
+  <scroll-view class="content" scroll-y>
+    <!-- 商品信息 -->
+    <view class="product-section">
+      <view class="product-card">
+        <image class="product-image" src="{{productImage}}" mode="aspectFill" />
+        <view class="product-info">
+          <text class="product-name">{{productName}}</text>
+          <text class="product-subtitle">{{productSubtitle}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 续租信息 -->
+    <view class="renew-section">
+      <view class="section-title">续租信息</view>
+      <view class="info-row">
+        <text class="info-label">原归还时间</text>
+        <text class="info-value">{{originalEndDate}}</text>
+      </view>
+      <view class="info-row">
+        <text class="info-label">续租至</text>
+        <text class="info-value highlight">{{renewEndDate}}</text>
+      </view>
+      <view class="info-row">
+        <text class="info-label">续租天数</text>
+        <text class="info-value">{{renewDays}}天</text>
+      </view>
+    </view>
+
+    <!-- 费用明细 -->
+    <view class="price-section">
+      <view class="section-title">费用明细</view>
+      <view class="price-row">
+        <text class="price-label">续租费用</text>
+        <text class="price-value">£{{renewPrice}}</text>
+      </view>
+      <view class="price-row total">
+        <text class="price-label">应付金额</text>
+        <text class="price-value">£{{renewPrice}}</text>
+      </view>
+    </view>
+
+    <!-- 提示信息 -->
+    <view class="notice-section">
+      <text class="notice-icon">💡</text>
+      <text class="notice-text">续租费用将在支付成功后更新订单归还时间</text>
+    </view>
+
+    <view class="bottom-placeholder"></view>
+  </scroll-view>
+
+  <!-- 底部栏 -->
+  <view class="bottom-bar" style="padding-bottom: calc(env(safe-area-inset-bottom) / 2 + 2px);">
+    <view class="bottom-left">
+      <text class="pay-label">续租费用</text>
+      <text class="pay-amount">£{{renewPrice}}</text>
+    </view>
+    <view class="pay-now-btn" bindtap="onPayRenew">
+      <text>确认支付</text>
+    </view>
+  </view>
+</view>
+

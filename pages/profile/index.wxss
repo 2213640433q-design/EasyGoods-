@@ -1,0 +1,257 @@
+page { 
+  height: 100vh; 
+  background: #F8F9FA;
+  overflow: hidden;
+}
+
+.page-wrapper {
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.page { 
+  display: flex;
+  flex-direction: column;
+  height: 100vh; 
+  background: #F8F9FA;
+  will-change: transform, opacity;
+}
+
+.topbar { 
+  position: relative;
+  background: #FFF; 
+  border-bottom: 1px solid #F2F2F7; 
+  z-index: 1100;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+/* 胶囊占位行：空的，只用来撑开高度 */
+.topbar-nav-placeholder {
+  /* height 由内联样式动态设置 */
+  /* 这一行不放任何内容，只是为胶囊按钮留出空间 */
+}
+
+/* 内容行：头像、用户信息、编辑按钮（在胶囊下方） */
+.topbar-user-content {
+  display: flex;
+  align-items: center; /* 横向中轴线对齐，头像和用户名水平居中对称 */
+  gap: 12px;
+  padding: 8px 16px; /* 固定的左右 padding */
+}
+
+.avatar-wrapper {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+}
+
+.topbar-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 24px;
+  display: block;
+}
+
+.topbar-avatar-default {
+  width: 48px;
+  height: 48px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #E8EAF6 0%, #C5CAE9 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.avatar-icon {
+  font-size: 28px;
+  line-height: 1;
+}
+
+.topbar-user-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* 保持文字容器在头像高度内居中 */
+  flex: 1; /* 占据剩余空间，将编辑按钮推到右侧 */
+  min-width: 0;
+  
+  /* ✨ 核心调整：向上平移 8px，弥补文字视觉中心的偏移 ✨ */
+  /* 针对 48px 的头像和 20px 的字体，向上平移 8px 达到最佳视觉效果 */
+  transform: translateY(-8px);
+}
+
+.topbar-nickname {
+  font-size: 20px; /* 加大字号，从17px改为20px */
+  font-weight: 600;
+  color: #1D1D1F;
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.topbar-nickname.login-hint {
+  color: #8E8E93; /* 灰色，提示未登录 */
+  font-weight: 400;
+}
+
+.topbar-school {
+  font-size: 13px;
+  color: #8E8E93;
+  margin-top: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.topbar-edit-text {
+  font-size: 14px;
+  color: #2E5A9B;
+  font-weight: 400;
+  flex-shrink: 0;
+}
+
+/* 滚动内容区 */
+.scroll-content {
+  flex: 1;
+  height: 100%;
+  width: 100%;
+}
+
+.section { background:#FFF; margin-top:12px; padding:12px 8px; }
+.section-title { font-size:14px; color:#8E8E93; padding:0 8px 8px; }
+.section-header { display:flex; align-items:center; justify-content:space-between; padding:0 8px 8px; }
+.section-more { display:flex; align-items:center; gap:4px; color:#8E8E93; font-size:12px; }
+.grid { display:flex; flex-wrap:wrap; }
+.grid-item { width:25%; display:flex; flex-direction:column; align-items:center; padding:16px 0; }
+.count { font-size:20px; font-weight:600; color:#1D1D1F; margin-bottom:6px; }
+.label { font-size:12px; color:#1D1D1F; }
+
+/* 租赁信息导航 */
+.rental-nav {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 12px 4px;
+  background: linear-gradient(135deg, #F8F9FA 0%, #F3F4F6 100%);
+  border-radius: 8px;
+  margin: 0 8px 16px;
+  border: 1px solid #E5E7EB;
+}
+
+.rental-nav-item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 6px;
+  position: relative;  /* 为气泡定位 */
+  transition: all 0.3s ease;
+}
+
+.rental-nav-item::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 16px;
+  background: #D1D5DB;
+}
+
+.rental-nav-item:last-child::after {
+  display: none;
+}
+
+.rental-nav-item:active {
+  opacity: 0.6;
+}
+
+.nav-item-text {
+  font-size: 13px;
+  color: #1D1D1F;
+  font-weight: 500;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* 订单数量（黑色文字） */
+.order-count {
+  color: #333;
+  font-size: 13px;
+  font-weight: 400;
+  margin-left: 2px;
+}
+
+.trade-grid { 
+  display: flex; 
+  justify-content: space-around; 
+  padding: 12px 16px; 
+  gap: 4px;
+}
+
+.trade-item { 
+  flex: 1; 
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  padding: 6px 2px;
+  max-width: 70px;
+  min-width: 50px;
+}
+
+/* 图标背景容器 */
+.trade-icon-bg {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+  transition: all 0.3s ease;
+}
+
+/* 图标图片 */
+.trade-icon-img {
+  width: 28px;
+  height: 28px;
+  display: block;
+  object-fit: contain;
+}
+
+.trade-text { 
+  font-size: 11px; 
+  color: #1D1D1F;
+  text-align: center;
+  line-height: 1.2;
+  font-weight: 400;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.arrow { color:#8E8E93; }
+
+/* 更多服务 */
+.service-list { padding:8px 0; }
+.service-item { display:flex; justify-content:space-between; align-items:center; padding:12px 16px; background:#FFF; border-bottom:1px solid #F7F7F7; }
+.service-item:last-child { border-bottom:none; }
+.service-label { font-size:12px; color:#1D1D1F; }
+.service-arrow { font-size:18px; color:#C7C7CC; }
+
+/* 底部占位，防止被导航栏遮挡 */
+.bottom-placeholder {
+  height: calc(60px + env(safe-area-inset-bottom));
+  flex-shrink: 0;
+}
+
+.bottom-nav { position: fixed; left: 0; right: 0; bottom: 0; background: #FFF; border-top: 1px solid #F3F4F6; display:flex; align-items:center; padding:2px 4px; padding-bottom: calc(env(safe-area-inset-bottom) / 2 + 2px); z-index: 1000; }
+.nav-item { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.nav-icon-img { width:24px; height:24px; margin-bottom:4px; display:block; }
+.nav-text { font-size:12px; color:#8E8E93; }
+.nav-item.active .nav-text { color:#4A6FA5; }
+

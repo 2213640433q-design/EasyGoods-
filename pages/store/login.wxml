@@ -1,0 +1,64 @@
+<view class="page">
+  <!-- 顶部导航栏 -->
+  <view class="topbar" style="padding-top: {{statusBarHeight}}px;">
+    <view class="nav-left" bindtap="goBack">
+      <text class="back-icon">‹</text>
+    </view>
+    <view class="nav-title">门店管理</view>
+    <view class="nav-right"></view>
+  </view>
+
+  <!-- 内容区域 -->
+  <view class="content">
+    <!-- 登录卡片 -->
+    <view class="login-card">
+      <view class="login-icon">🏪</view>
+      <text class="login-title">门店后台管理系统</text>
+      <text class="login-subtitle">请选择门店并验证密码</text>
+      
+      <!-- 选择门店 -->
+      <view class="form-item">
+        <text class="form-label">选择门店</text>
+        <picker 
+          mode="selector" 
+          range="{{storeList}}" 
+          range-key="name"
+          value="{{selectedStoreIndex}}"
+          bindchange="onStoreChange"
+        >
+          <view class="picker-value">
+            <text class="picker-text {{selectedStore ? '' : 'placeholder'}}">
+              {{selectedStore ? selectedStore.name : '请选择门店'}}
+            </text>
+            <text class="picker-arrow">›</text>
+          </view>
+        </picker>
+      </view>
+      
+      <!-- 输入密码 -->
+      <view class="form-item">
+        <text class="form-label">门店密码</text>
+        <input 
+          class="password-input" 
+          type="password"
+          placeholder="请输入密码"
+          value="{{password}}"
+          bindinput="onPasswordInput"
+          maxlength="20"
+        />
+      </view>
+      
+      <!-- 登录按钮 -->
+      <button class="login-btn" bindtap="onLogin">
+        登录门店管理
+      </button>
+    </view>
+    
+    <!-- 提示信息 -->
+    <view class="tip-section">
+      <text class="tip-icon">💡</text>
+      <text class="tip-text">默认密码：123456</text>
+    </view>
+  </view>
+</view>
+

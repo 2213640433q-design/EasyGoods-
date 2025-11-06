@@ -1,0 +1,136 @@
+<view class="page">
+  <!-- 顶部导航栏 -->
+  <view class="topbar" style="padding-top: {{statusBarHeight}}px; height: {{totalNavHeight}}px;">
+    <view class="topbar-content">
+      <view class="nav-left" bindtap="goBack">
+        <text class="back">‹</text>
+      </view>
+      <text class="title">红包卡券</text>
+      <view class="nav-right"></view>
+    </view>
+  </view>
+
+  <!-- Tab切换 -->
+  <view class="tabs-section" style="top: {{totalNavHeight}}px;">
+    <view class="tab-item {{currentTab === 0 ? 'active' : ''}}" 
+          data-index="0" 
+          bindtap="onTabChange">
+      <text class="tab-text">我的优惠券</text>
+      <view class="tab-indicator" wx:if="{{currentTab === 0}}"></view>
+    </view>
+    <view class="tab-item {{currentTab === 1 ? 'active' : ''}}" 
+          data-index="1" 
+          bindtap="onTabChange">
+      <text class="tab-text">领取优惠券</text>
+      <view class="tab-indicator" wx:if="{{currentTab === 1}}"></view>
+    </view>
+  </view>
+
+  <!-- 优惠券列表 -->
+  <scroll-view scroll-y class="content" style="margin-top: calc({{totalNavHeight}}px + 48px);" enable-back-to-top>
+    <!-- Tab 0: 我的优惠券 -->
+    <view wx:if="{{currentTab === 0}}">
+      <!-- 空状态 -->
+      <view class="empty-state" wx:if="{{myCoupons.length === 0}}">
+        <text class="empty-icon">🎟️</text>
+        <text class="empty-text">暂无优惠券</text>
+        <text class="empty-hint">去领券中心看看吧~</text>
+      </view>
+      
+      <!-- 我的优惠券列表 -->
+      <view class="coupon-list" wx:else>
+        <view class="coupon-card {{item.status !== 'unused' ? 'disabled' : ''}}" wx:for="{{myCoupons}}" wx:key="id">
+          <!-- 左侧信息区 -->
+          <view class="coupon-left">
+            <view class="coupon-name">{{item.name}}</view>
+            <view class="coupon-bottom-row">
+              <text class="coupon-expiry">{{item.expiryText}}</text>
+              <text class="coupon-rules" bindtap="showRules" data-rules="{{item.rules}}">规则 ›</text>
+            </view>
+          </view>
+          
+          <!-- 右侧金额和按钮区 -->
+          <view class="coupon-right">
+            <view class="coupon-amount-wrapper">
+              <text class="amount-symbol">£</text>
+              <text class="amount-value">{{item.amount}}</text>
+            </view>
+            <view class="coupon-threshold">满{{item.threshold}}可用</view>
+            <view class="use-btn" wx:if="{{item.status === 'unused'}}" bindtap="onUseCoupon" data-id="{{item.id}}">去使用</view>
+            <view class="status-badge" wx:elif="{{item.status === 'used'}}">已使用</view>
+            <view class="status-badge" wx:else>已过期</view>
+          </view>
+          
+          <!-- 已使用/已过期水印 -->
+          <view class="watermark" wx:if="{{item.status !== 'unused'}}">
+            {{item.status === 'used' ? '已使用' : '已过期'}}
+          </view>
+        </view>
+      </view>
+    </view>
+    
+    <!-- Tab 1: 领取优惠券 -->
+    <view wx:elif="{{currentTab === 1}}">
+      <!-- 空状态 -->
+      <view class="empty-state" wx:if="{{availableCoupons.length === 0}}">
+        <text class="empty-icon">🎁</text>
+        <text class="empty-text">暂无可领取优惠券</text>
+        <text class="empty-hint">请关注后续活动~</text>
+      </view>
+      
+      <!-- 可领取优惠券列表 -->
+      <view class="coupon-list" wx:else>
+        <view class="coupon-card {{item.isReceived ? 'received' : ''}}" wx:for="{{availableCoupons}}" wx:key="id">
+          <!-- 左侧信息区 -->
+          <view class="coupon-left">
+            <view class="coupon-name">{{item.name}}</view>
+            <view class="coupon-bottom-row">
+              <text class="coupon-expiry">{{item.expiryText}}</text>
+              <text class="coupon-rules" bindtap="showRules" data-rules="{{item.rules}}">规则 ›</text>
+            </view>
+            <view class="coupon-stock" wx:if="{{!item.isReceived}}">剩余 {{item.stock}} 张</view>
+          </view>
+          
+          <!-- 右侧金额和按钮区 -->
+          <view class="coupon-right">
+            <view class="coupon-amount-wrapper">
+              <text class="amount-symbol">£</text>
+              <text class="amount-value">{{item.amount}}</text>
+            </view>
+            <view class="coupon-threshold">满{{item.threshold}}可用</view>
+            <view class="receive-btn" wx:if="{{item.canReceive}}" bindtap="onReceiveCoupon" data-id="{{item.id}}">立即领取</view>
+            <view class="received-badge" wx:elif="{{item.isReceived}}">已领取</view>
+            <view class="soldout-badge" wx:else>已抢光</view>
+          </view>
+          
+          <!-- 已领取水印 -->
+          <view class="watermark" wx:if="{{item.isReceived}}">已领取</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 底部提示 -->
+    <view class="footer-tip">
+      <view class="tip-line"></view>
+      <text class="tip-text">暂无更多优惠券</text>
+      <view class="tip-line"></view>
+    </view>
+  </scroll-view>
+
+  <!-- 规则弹窗 -->
+  <view class="rules-modal" wx:if="{{showRulesModal}}" bindtap="closeRules">
+    <view class="rules-content" catchtap="stopPropagation">
+      <view class="rules-header">
+        <text class="rules-title">使用规则</text>
+        <view class="rules-close" bindtap="closeRules">✕</view>
+      </view>
+      <view class="rules-body">
+        <text class="rules-text">{{currentRules}}</text>
+      </view>
+      <view class="rules-footer">
+        <view class="rules-btn" bindtap="closeRules">我知道了</view>
+      </view>
+    </view>
+  </view>
+</view>
+

@@ -1,0 +1,9 @@
+{
+  "navigationStyle": "custom",
+  "disableScroll": true,
+  "usingComponents": {
+    "custom-modal": "/components/custom-modal/custom-modal"
+  }
+}
+
+

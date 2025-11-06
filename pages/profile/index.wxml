@@ -1,0 +1,157 @@
+<view class="page-wrapper"
+      bindtouchstart="onPageTouchStart"
+      bindtouchmove="onPageTouchMove"
+      bindtouchend="onPageTouchEnd">
+<view class="page" style="transform: translateX({{pageSwipeOffset}}px); opacity: {{pageSwipeOpacity}}; transition: {{pageSwipeTransition}};">
+  <view class="topbar" style="padding-top: {{statusBarHeight}}px;">
+    <!-- 胶囊占位行：空的，只用来撑开高度 -->
+    <view class="topbar-nav-placeholder" style="height: {{navBarHeight}}px;"></view>
+    
+    <!-- 内容行：头像、用户信息、编辑按钮（在胶囊下方） -->
+    <view class="topbar-user-content">
+      <!-- 头像 -->
+      <view class="avatar-wrapper" bindtap="{{userInfo.avatar ? 'onAvatarTap' : 'onLogin'}}">
+        <image wx:if="{{userInfo.avatar}}" class="topbar-avatar" src="{{userInfo.avatar}}" mode="aspectFill"/>
+        <view wx:else class="topbar-avatar-default">
+          <text class="avatar-icon">👤</text>
+        </view>
+      </view>
+      <!-- 用户信息 -->
+      <view class="topbar-user-info" bindtap="{{userInfo.avatar ? '' : 'onLogin'}}">
+        <text class="topbar-nickname {{userInfo.avatar ? '' : 'login-hint'}}">
+          {{userInfo.nickname || openid || '点击登录'}}
+        </text>
+        <text class="topbar-school" wx:if="{{userInfo.school}}">{{userInfo.school}}</text>
+      </view>
+      <!-- 编辑按钮（靠右） - 仅登录后显示 -->
+      <text wx:if="{{userInfo.avatar}}" class="topbar-edit-text" bindtap="goEditProfile">编辑</text>
+    </view>
+  </view>
+  
+  <scroll-view scroll-y class="scroll-content" enable-back-to-top>
+  <view class="section">
+    <view class="section-title">常用</view>
+    <view class="grid">
+      <view class="grid-item" bindtap="onShortcut" data-key="favorite">
+        <text class="count">{{favoriteCount}}</text>
+        <text class="label">我的收藏</text>
+      </view>
+      <view class="grid-item" bindtap="onShortcut" data-key="history">
+        <text class="count">{{historyCount}}</text>
+        <text class="label">浏览记录</text>
+      </view>
+      <view class="grid-item" bindtap="onShortcut" data-key="follow">
+        <text class="count">5</text>
+        <text class="label">我的关注</text>
+      </view>
+      <view class="grid-item" bindtap="onShortcut" data-key="coupon">
+        <text class="count">{{couponCount}}</text>
+        <text class="label">红包卡券</text>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 租赁信息 -->
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">租赁信息</text>
+      <view class="section-more" bindtap="goAllOrders"><text>全部订单</text><text class="arrow">›</text></view>
+    </view>
+    <view class="rental-nav">
+      <view class="rental-nav-item" bindtap="goOrderStatus" data-status="">
+        <text class="nav-item-text">全部订单</text>
+        <text wx:if="{{allOrderCount > 0}}" class="order-count"> {{allOrderCount}}</text>
+      </view>
+      <view class="rental-nav-item" bindtap="goOrderStatus" data-status="待支付">
+        <text class="nav-item-text">待支付</text>
+        <text wx:if="{{pendingOrderCount > 0}}" class="order-count"> {{pendingOrderCount}}</text>
+      </view>
+      <view class="rental-nav-item" bindtap="goOrderStatus" data-status="待取件">
+        <text class="nav-item-text">待取件</text>
+        <text wx:if="{{pickupOrderCount > 0}}" class="order-count"> {{pickupOrderCount}}</text>
+      </view>
+      <view class="rental-nav-item" bindtap="goOrderStatus" data-status="租赁中">
+        <text class="nav-item-text">租赁中</text>
+        <text wx:if="{{rentingOrderCount > 0}}" class="order-count"> {{rentingOrderCount}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 我的租赁 -->
+  <view class="section">
+    <view class="section-title">我的租赁</view>
+    <view class="trade-grid">
+      <view class="trade-item" bindtap="onTrade" data-key="address">
+        <view class="trade-icon-bg address">
+          <image class="trade-icon-img" src="/static/icons/rental/address.png" mode="aspectFit"/>
+        </view>
+        <text class="trade-text">收货地址</text>
+      </view>
+      <view class="trade-item" bindtap="onTrade" data-key="verify">
+        <view class="trade-icon-bg verify">
+          <image class="trade-icon-img" src="/static/icons/rental/verify.png" mode="aspectFit"/>
+        </view>
+        <text class="trade-text">实名认证</text>
+      </view>
+      <view class="trade-item" bindtap="onTrade" data-key="deposit">
+        <view class="trade-icon-bg deposit">
+          <image class="trade-icon-img" src="/static/icons/rental/deposit.png" mode="aspectFit"/>
+        </view>
+        <text class="trade-text">我的押金</text>
+      </view>
+      <view class="trade-item" bindtap="onTrade" data-key="service">
+        <view class="trade-icon-bg service">
+          <image class="trade-icon-img" src="/static/icons/rental/service.png" mode="aspectFit"/>
+        </view>
+        <text class="trade-text">在线客服</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 更多服务 -->
+  <view class="section">
+    <view class="section-title">更多服务</view>
+    <view class="service-list">
+      <view class="service-item" bindtap="goStoreScan">
+        <text class="service-label">📦 门店取件</text>
+        <text class="service-arrow">›</text>
+      </view>
+      <view class="service-item" bindtap="onService" data-key="city">
+        <text class="service-label">入驻城市</text>
+        <text class="service-arrow">›</text>
+      </view>
+      <view class="service-item" bindtap="onService" data-key="customer">
+        <text class="service-label">客服中心</text>
+        <text class="service-arrow">›</text>
+      </view>
+      <view class="service-item" bindtap="onService" data-key="about">
+        <text class="service-label">关于我们</text>
+        <text class="service-arrow">›</text>
+      </view>
+      <view class="service-item" bindtap="onService" data-key="business">
+        <text class="service-label">商务合作</text>
+        <text class="service-arrow">›</text>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 底部占位，防止被导航栏遮挡 -->
+  <view class="bottom-placeholder"></view>
+  </scroll-view>
+
+  <view class="bottom-nav">
+    <view class="nav-item" bindtap="onNavTap" data-page="index"><image class="nav-icon-img" src="/static/tabbar/png/home-outline.png" mode="widthFix"/><text class="nav-text">首页</text></view>
+    <view class="nav-item active" bindtap="onNavTap" data-page="profile"><image class="nav-icon-img" src="/static/tabbar/png/profile-filled.png" mode="widthFix"/><text class="nav-text">我的</text></view>
+  </view>
+
+  <!-- 自定义组件：仿原生弹窗 -->
+  <custom-modal 
+    visible="{{isModalVisible}}" 
+    title="{{modalTitle}}" 
+    content="{{modalContent}}" 
+    showCancel="{{false}}" 
+    confirmText="知道了" 
+    bind:confirm="onModalConfirm" />
+</view>
+</view>
+

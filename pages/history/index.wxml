@@ -1,0 +1,73 @@
+<view class="page">
+  <!-- 顶部导航栏 -->
+  <view class="topbar" style="padding-top: {{statusBarHeight}}px; height: {{totalNavHeight}}px;">
+    <view class="topbar-content">
+      <view class="nav-left" bindtap="goBack">
+        <text class="back">‹</text>
+      </view>
+      <text class="title">浏览记录</text>
+      <view class="nav-right">
+        <!-- 管理按钮移到下方日期标签处 -->
+      </view>
+    </view>
+  </view>
+
+  <!-- 浏览记录列表 -->
+  <scroll-view scroll-y class="content" style="margin-top: {{totalNavHeight}}px;">
+    <!-- 空状态提示 -->
+    <view class="empty-state" wx:if="{{groupedRecords.length === 0}}">
+      <text class="empty-icon">📖</text>
+      <text class="empty-text">暂无浏览记录</text>
+      <text class="empty-hint">去首页逛逛吧~</text>
+    </view>
+    
+    <!-- 有数据时显示列表 -->
+    <view class="records-list" wx:else>
+      <!-- 按日期分组 -->
+      <view class="date-group" wx:for="{{groupedRecords}}" wx:key="date" wx:for-index="groupIndex">
+        <view class="date-header">
+          <text class="date-label">{{item.dateLabel}}</text>
+          <!-- 管理按钮（只在第一个日期组显示） -->
+          <text wx:if="{{groupIndex === 0}}" class="manage-btn" bindtap="toggleManage">{{isManage ? '完成' : '管理'}}</text>
+        </view>
+        
+        <!-- 商品网格 -->
+        <view class="products-grid">
+          <view class="product-card" wx:for="{{item.records}}" wx:key="id" wx:for-item="record">
+            <!-- 管理模式下的选择框 -->
+            <view class="checkbox-wrapper" wx:if="{{isManage}}" data-id="{{record.id}}" catchtap="onCheckboxTap">
+              <checkbox class="checkbox" checked="{{selectedIds[record.id]}}" />
+            </view>
+            
+            <!-- 商品图片 -->
+            <view class="product-image-wrapper" bindtap="onProductTap" data-id="{{record.productId}}">
+              <image class="product-image" src="{{record.image}}" mode="aspectFill"/>
+            </view>
+            
+            <!-- 商品价格 -->
+            <view class="product-price" bindtap="onProductTap" data-id="{{record.productId}}">
+              <text class="currency">{{record.currency}}</text>
+              <text class="price">{{record.price}}</text>
+              <text class="unit" wx:if="{{record.unit}}">/{{record.unit}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+      
+      <!-- 底部提示 -->
+      <view class="footer-tip">
+        <view class="tip-line"></view>
+        <text class="tip-text">到底啦，仅展示近30日记录</text>
+        <view class="tip-line"></view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 管理模式底部栏 -->
+  <view class="manage-bar" wx:if="{{isManage}}" style="padding-bottom: calc(env(safe-area-inset-bottom) + 8px);">
+    <checkbox class="chk-all" checked="{{allChecked}}" bindchange="onToggleAll"/> 
+    <text class="all-text">全选</text>
+    <view class="delete-btn" bindtap="onBatchDelete">删除</view>
+  </view>
+</view>
+

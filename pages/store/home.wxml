@@ -1,0 +1,79 @@
+<view class="page">
+  <!-- 顶部导航栏 -->
+  <view class="topbar" style="padding-top: {{statusBarHeight}}px;">
+    <view class="nav-left" bindtap="onLogout">
+      <text class="back-icon">‹</text>
+    </view>
+    <view class="nav-title">{{storeName}}</view>
+    <view class="nav-right"></view>
+  </view>
+
+  <!-- 一键扫码按钮 -->
+  <view class="scan-bar">
+    <button class="scan-btn" bindtap="onQuickScan">
+      <text class="scan-btn-icon">📷</text>
+      <text class="scan-btn-text">一键扫码</text>
+    </button>
+  </view>
+
+  <!-- 筛选栏（独立横向滚动） -->
+  <scroll-view class="filter-scroll" scroll-x>
+    <view class="filter-bar">
+      <view 
+        class="filter-item {{currentFilter === item.status ? 'active' : ''}}" 
+        wx:for="{{filterList}}" 
+        wx:key="status"
+        catchtap="onFilterChange"
+        data-status="{{item.status}}"
+      >
+        <text class="filter-text">{{item.name}}</text>
+        <text class="filter-count" wx:if="{{item.count > 0}}">{{item.count}}</text>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 订单列表 -->
+  <scroll-view class="content" scroll-y enable-back-to-top>
+
+    <!-- 订单列表 -->
+    <view class="order-list">
+      <view 
+        class="order-item" 
+        wx:for="{{orderList}}" 
+        wx:key="_id"
+        bindtap="onViewOrder"
+        data-order-id="{{item.orderId}}"
+      >
+        <!-- 订单头部 -->
+        <view class="order-header">
+          <view class="order-id-wrapper">
+            <text class="order-id">{{item.orderId}}</text>
+            <text class="order-status {{item.status}}">{{item.statusText}}</text>
+          </view>
+          <text class="order-time">{{item.createTime}}</text>
+        </view>
+
+        <!-- 商品信息 -->
+        <view class="order-product">
+          <image class="product-img" src="{{item.productImage}}" mode="aspectFill" />
+          <view class="product-info">
+            <text class="product-name">{{item.productName}}</text>
+            <text class="product-detail">租期：{{item.rentalDays}}天</text>
+            <text class="product-detail">{{item.rentalStartDate}} ~ {{item.rentalEndDate}}</text>
+          </view>
+          <view class="order-amount">
+            <text class="amount-label">总额</text>
+            <text class="amount-value">£{{item.totalAmount}}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 空状态 -->
+      <view class="empty-state" wx:if="{{orderList.length === 0}}">
+        <text class="empty-icon">📦</text>
+        <text class="empty-text">暂无订单</text>
+      </view>
+    </view>
+  </scroll-view>
+</view>
+

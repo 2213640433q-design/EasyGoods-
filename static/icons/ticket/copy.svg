@@ -1,0 +1,12 @@
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <!-- 后面的文档 -->
+  <rect x="10" y="10" width="14" height="16" rx="2" fill="none" stroke="#8E8E93" stroke-width="2"/>
+  <!-- 前面的文档 -->
+  <rect x="8" y="6" width="14" height="16" rx="2" fill="#FFF" stroke="#8E8E93" stroke-width="2"/>
+  <!-- 装饰线条 -->
+  <line x1="11" y1="10" x2="17" y2="10" stroke="#8E8E93" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="11" y1="13" x2="17" y2="13" stroke="#8E8E93" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="11" y1="16" x2="15" y2="16" stroke="#8E8E93" stroke-width="1.5" stroke-linecap="round"/>
+</svg>
+
+

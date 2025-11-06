@@ -1,0 +1,85 @@
+<view class="page">
+  <!-- 顶部导航栏 -->
+  <view class="topbar" style="padding-top: {{statusBarHeight}}px; height: {{totalNavHeight}}px;">
+    <view class="topbar-content">
+      <view class="nav-left" bindtap="goBack"><text class="back">‹</text></view>
+      <text class="title">全部订单</text>
+      <view class="nav-right"></view>
+    </view>
+  </view>
+  
+  <!-- 租赁筛选 -->
+  <scroll-view class="filters-container" scroll-x scroll-with-animation scroll-left="{{filterScrollLeft}}">
+    <view class="filters-wrapper">
+      <view class="filter {{ (currentFilter === '' && f === '全部') || (currentFilter === f) ? 'active' : '' }}"
+            wx:for="{{rentFilters}}" wx:for-item="f" wx:for-index="i" wx:key="i" 
+            data-key="{{f}}" data-index="{{i}}" bindtap="onFilterTap">
+        <text>{{f}}</text>
+        <text wx:if="{{f === '全部' && allOrderCount > 0}}" class="filter-count"> {{allOrderCount}}</text>
+        <text wx:elif="{{f === '待支付' && pendingOrderCount > 0}}" class="filter-count"> {{pendingOrderCount}}</text>
+        <text wx:elif="{{f === '待取件' && pickupOrderCount > 0}}" class="filter-count"> {{pickupOrderCount}}</text>
+        <text wx:elif="{{f === '租赁中' && rentingOrderCount > 0}}" class="filter-count"> {{rentingOrderCount}}</text>
+        <text wx:elif="{{f === '检查中' && checkingOrderCount > 0}}" class="filter-count"> {{checkingOrderCount}}</text>
+        <text wx:elif="{{f === '已完成' && completedOrderCount > 0}}" class="filter-count"> {{completedOrderCount}}</text>
+      </view>
+    </view>
+  </scroll-view>
+  
+  <view class="list-container"
+        bindtouchstart="onTouchStart"
+        bindtouchmove="onTouchMove"
+        bindtouchend="onTouchEnd">
+    <scroll-view scroll-y class="list" 
+                 enable-back-to-top
+                 style="transform: translateX({{swipeOffset}}px); opacity: {{swipeOpacity}}; transition: {{swipeTransition}};">
+      <view class="item" wx:for="{{orders}}" wx:key="id">
+      <!-- 中间：商品图片 + 信息 -->
+      <view class="item-body">
+        <!-- 左侧：商品图片 -->
+        <image class="product-image" src="{{item.image}}" mode="aspectFill"/>
+        
+        <!-- 右侧：商品信息 -->
+        <view class="product-info">
+          <!-- 设备名称 + 订单状态 -->
+          <view class="title-row">
+            <text class="product-title">{{item.title}}</text>
+            <text class="status status-{{item.rawStatus}}">{{item.status}}</text>
+          </view>
+          
+          <!-- 门店名称 -->
+          <view class="info-row">
+            <text class="info-label">门店：</text>
+            <text class="info-value">{{item.shop}}</text>
+          </view>
+          
+          <!-- 门店位置 -->
+          <view class="info-row" wx:if="{{item.storeAddress}}">
+            <text class="info-label">位置：</text>
+            <text class="info-value">{{item.storeAddress}}</text>
+          </view>
+          
+          <!-- 时间信息 -->
+          <view class="info-row highlight" wx:if="{{item.timeLabel}}">
+            <text class="info-label">{{item.timeLabel}}：</text>
+            <text class="info-value time">{{item.timeValue}}</text>
+          </view>
+          
+          <!-- 订单编号 -->
+          <view class="info-row">
+            <text class="info-label">订单编号：</text>
+            <text class="info-value order-id">{{item.orderId}}</text>
+          </view>
+        </view>
+      </view>
+      
+      <!-- 底部：金额 + 按钮 -->
+      <view class="item-footer">
+        <text class="amount">£{{item.amount}}</text>
+        <button class="btn {{item.rawStatus === 'pending' ? 'btn-primary' : ''}}" size="mini" bindtap="onOrderAction" data-id="{{item.id}}">
+          {{item.rawStatus === 'pending' ? '继续支付' : '查看订单'}}
+        </button>
+      </view>
+    </view>
+    </scroll-view>
+  </view>
+</view>

@@ -1,0 +1,17 @@
+<view class="custom-modal-mask" hidden="{{!visible}}" bindtap="hideModal">
+  <view class="custom-modal-content" catchtap="stopBubble">
+    <view class="custom-modal-title" wx:if="{{title}}">{{title}}</view>
+    <view class="custom-modal-body">
+      <text class="modal-body-text">{{content}}</text>
+    </view>
+    <view class="custom-modal-split"></view>
+    <view class="custom-modal-footer">
+      <view class="custom-modal-btn custom-modal-cancel-btn" wx:if="{{showCancel}}" bindtap="onCancel">{{cancelText}}</view>
+      <view class="custom-modal-btn-split" wx:if="{{showCancel && showConfirm}}"></view>
+      <view class="custom-modal-btn custom-modal-confirm-btn" style="color: {{confirmColor}};" wx:if="{{showConfirm}}" bindtap="onConfirm">{{confirmText}}</view>
+    </view>
+  </view>
+</view>
+
+
+

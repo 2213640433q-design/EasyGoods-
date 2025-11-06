@@ -1,0 +1,15 @@
+{
+  "name": "getProductDetail",
+  "version": "1.0.0",
+  "description": "获取商品详情（支持通过ID或_id查询）",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}
+

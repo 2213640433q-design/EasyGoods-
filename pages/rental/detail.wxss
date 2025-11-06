@@ -1,0 +1,834 @@
+page { height: 100vh; background: #F5F5F5; }
+
+/* 顶部导航栏 */
+.navbar { position: fixed; top: 0; left: 0; right: 0; background: #FFF; border-bottom: 1px solid #E5E5E5; z-index: 1000; }
+.navbar-content { display: flex; align-items: center; justify-content: space-between; padding: 0 16px; }
+.nav-back { display: flex; align-items: center; }
+.back-icon { font-size: 28px; color: #1D1D1F; }
+.nav-title { flex: 1; text-align: center; font-size: 17px; font-weight: 600; color: #1D1D1F; }
+.nav-actions { width: 40px; }
+
+/* 可滚动内容区 */
+.rental-detail-scroll { 
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 60px;
+  overflow-y: auto;
+}
+
+/* 顶部Logo */
+.top-logo { 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  padding: 16px 0 12px; 
+  background: #FFF;
+  margin-top: calc(env(safe-area-inset-top) + 44px);
+}
+.logo-img { width: 32px; height: 32px; margin-right: 8px; }
+.logo-text { font-size: 14px; color: #667B8C; font-weight: 500; }
+
+/* 商品图片轮播 */
+.product-images { position: relative; background: #FFF; }
+.swiper { height: 375px; }
+.product-main-image { width: 100%; height: 100%; }
+.image-indicator { 
+  position: absolute; 
+  bottom: 12px; 
+  right: 12px; 
+  background: rgba(0,0,0,0.5); 
+  color: #FFF; 
+  padding: 4px 10px; 
+  border-radius: 12px; 
+  font-size: 12px; 
+}
+
+/* 提示按钮 */
+.alert-button { 
+  background: linear-gradient(135deg, #4A6FA5 0%, #5A7A9B 100%); 
+  color: #FFF; 
+  text-align: center; 
+  padding: 10px 16px; 
+  font-size: 14px; 
+  margin: 0 16px; 
+  margin-top: 12px; 
+  border-radius: 8px; 
+}
+
+/* 商品主要信息 */
+.product-main-info { background: #FFF; padding: 16px; margin-top: 12px; }
+.product-title-section { margin-bottom: 12px; }
+.product-title { font-size: 20px; font-weight: 600; color: #1D1D1F; line-height: 1.4; margin-bottom: 4px; }
+.product-subtitle { 
+  display: inline-block; 
+  background: #E8F4FD; 
+  color: #4A6FA5; 
+  padding: 3px 10px; 
+  border-radius: 4px; 
+  font-size: 12px; 
+}
+.deposit-section { 
+  display: flex; 
+  align-items: baseline; 
+  justify-content: space-between;
+}
+
+.deposit-left {
+  display: flex;
+  align-items: baseline;
+}
+
+.deposit-label { 
+  font-size: 15px; 
+  color: #1D1D1F; 
+  margin-right: 8px; 
+}
+
+.deposit-note { 
+  font-size: 13px; 
+  color: #8E8E93; 
+}
+
+.rental-count {
+  font-size: 12px;
+  color: #8E8E93;
+}
+
+/* 租期选项卡片 - 看板风格 */
+.rental-options-card { 
+  background: #FFF; 
+  padding: 16px; 
+  margin-top: 12px; 
+  display: flex; 
+  justify-content: space-between;
+  align-items: center;
+}
+.rental-option-item { 
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 4px;
+  text-align: center;
+  border-right: 1px solid #E5E7EB;
+}
+.rental-option-item:last-child { 
+  border-right: none; 
+}
+.option-price { 
+  margin-bottom: 4px;
+  line-height: 1.2;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+}
+.price-number {
+  font-size: 16px;
+  font-weight: 400;
+  color: #FF9999;
+}
+.price-unit {
+  font-size: 11px;
+  font-weight: 400;
+  color: #FF9999;
+}
+.option-label { 
+  font-size: 11px; 
+  color: #9CA3AF; 
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+/* 信息区块 */
+.info-section { background: #FFF; padding: 16px; margin-top: 12px; }
+.info-row { 
+  display: flex; 
+  padding: 12px 0; 
+  border-bottom: 1px solid #F2F2F7; 
+  align-items: flex-start;
+}
+.info-row:last-child { border-bottom: none; }
+.info-label { 
+  width: 60px; 
+  flex-shrink: 0; 
+  font-size: 14px; 
+  color: #8E8E93; 
+}
+.info-value { 
+  flex: 1; 
+  font-size: 14px; 
+  color: #1D1D1F; 
+  line-height: 1.6; 
+}
+.stores-list { display: flex; flex-wrap: wrap; flex: 1; }
+.store-item { 
+  background: #F2F2F7; 
+  padding: 4px 8px; 
+  border-radius: 4px; 
+  font-size: 12px; 
+  color: #1D1D1F; 
+  margin-right: 6px; 
+  margin-bottom: 6px; 
+}
+
+/* Tab切换 */
+.detail-tabs { 
+  background: #FFF; 
+  display: flex; 
+  margin-top: 12px; 
+  padding: 0 16px; 
+}
+.tab-item { 
+  position: relative; 
+  flex: 1; 
+  text-align: center; 
+  padding: 14px 0; 
+}
+.tab-text { font-size: 15px; color: #8E8E93; }
+/* Skyline不支持:has伪类，通过WXML中的wx:if来控制样式 */
+.tab-underline { 
+  position: absolute; 
+  bottom: 0; 
+  left: 50%; 
+  transform: translateX(-50%); 
+  width: 30px; 
+  height: 3px; 
+  background: #4A6FA5; 
+  border-radius: 2px; 
+}
+
+/* Tab内容 */
+.tab-content { background: #FFF; }
+.tab-panel { padding: 16px; }
+
+/* 温馨提示卡片 */
+.warning-card { 
+  background: #FFF4E5; 
+  border-radius: 8px; 
+  padding: 12px; 
+  display: flex; 
+  margin-bottom: 16px; 
+}
+.warning-icon { font-size: 24px; margin-right: 10px; flex-shrink: 0; }
+.warning-content { flex: 1; }
+.warning-title { font-size: 14px; font-weight: 600; color: #1D1D1F; margin-bottom: 4px; }
+.warning-text { font-size: 13px; color: #666; line-height: 1.6; }
+
+/* 对比图区块 */
+.comparison-section { margin-bottom: 20px; }
+.section-title { 
+  font-size: 15px; 
+  font-weight: 600; 
+  color: #1D1D1F; 
+  margin-bottom: 12px; 
+  text-align: center; 
+  background: #E8F4FD; 
+  padding: 8px; 
+  border-radius: 6px; 
+}
+.comparison-image { width: 100%; border-radius: 8px; margin-bottom: 12px; }
+
+/* 产品参数 */
+.specs-section { margin-bottom: 20px; }
+.spec-row { 
+  display: flex; 
+  padding: 10px 0; 
+  border-bottom: 1px solid #F2F2F7; 
+}
+.spec-row:last-child { border-bottom: none; }
+.spec-label { width: 120px; font-size: 14px; color: #8E8E93; }
+.spec-value { flex: 1; font-size: 14px; color: #1D1D1F; }
+
+/* 宣传图区块 */
+.promo-image-section { margin-top: 20px; }
+.promo-image { width: 100%; border-radius: 8px; }
+
+/* 样片网格 */
+.sample-images-grid { 
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.sample-image { 
+  width: calc(50% - 4px);
+  height: 200px; 
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+/* 查看更多 */
+.view-more { 
+  text-align: center; 
+  padding: 16px; 
+  color: #4A6FA5; 
+  font-size: 14px; 
+}
+.view-more-text { margin-right: 4px; }
+.arrow { font-size: 16px; }
+
+/* 评价区块 */
+.reviews-list { padding: 0; }
+.review-item { 
+  padding: 16px 0; 
+  border-bottom: 1px solid #F2F2F7; 
+}
+.review-item:last-child { border-bottom: none; }
+.review-header { display: flex; margin-bottom: 12px; }
+.reviewer-avatar { width: 40px; height: 40px; border-radius: 20px; margin-right: 12px; flex-shrink: 0; }
+.reviewer-info { flex: 1; }
+.reviewer-name-row { display: flex; align-items: center; margin-bottom: 4px; }
+.reviewer-name { font-size: 14px; font-weight: 600; color: #1D1D1F; margin-right: 8px; }
+.reviewer-level { 
+  background: #FFD700; 
+  color: #FFF; 
+  font-size: 10px; 
+  padding: 2px 6px; 
+  border-radius: 3px; 
+}
+.review-stars { }
+.star { font-size: 12px; margin-right: 2px; }
+.review-content { font-size: 14px; color: #1D1D1F; line-height: 1.6; margin-bottom: 8px; }
+.review-images { display: flex; margin-bottom: 8px; }
+.review-image { width: 80px; height: 80px; border-radius: 6px; margin-right: 8px; }
+.review-date { font-size: 12px; color: #8E8E93; }
+
+/* 底部占位 */
+.bottom-placeholder { height: 80px; }
+
+/* 底部操作栏 */
+.bottom-bar { 
+  position: fixed; 
+  left: 0; 
+  right: 0; 
+  bottom: 0; 
+  background: #FFF; 
+  border-top: 1px solid #E5E5E5; 
+  display: flex; 
+  align-items: center; 
+  padding: 8px 16px; 
+  z-index: 1000; 
+}
+.bar-left { display: flex; align-items: center; margin-right: 12px; }
+.service-btn { 
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  padding: 0 12px; 
+}
+.service-icon { font-size: 24px; margin-bottom: 2px; }
+.service-icon-img { width: 24px; height: 24px; margin-bottom: 2px; }
+.service-text { font-size: 11px; color: #8E8E93; }
+.bar-right { flex: 1; }
+.btn-primary { 
+  width: 100%; 
+  height: 44px; 
+  background: linear-gradient(135deg, #4A6FA5 0%, #5A7A9B 100%); 
+  color: #FFF; 
+  border-radius: 22px; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  font-size: 16px; 
+  font-weight: 600; 
+  box-shadow: 0 4px 12px rgba(74, 111, 165, 0.3); 
+}
+
+/* 租赁滑窗 */
+.rental-sheet-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 2000;
+}
+
+.rental-sheet {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: auto;
+  background: #FFF;
+  border-radius: 16px 16px 0 0;
+  z-index: 2001;
+  transition: transform 0.3s ease;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.sheet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid #F2F2F7;
+}
+
+.sheet-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: #1D1D1F;
+}
+
+.sheet-close {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: #8E8E93;
+}
+
+.sheet-content {
+  padding: 16px 20px;
+  max-height: 50vh;
+  overflow-y: auto;
+}
+
+.sheet-item {
+  margin-bottom: 20px;
+}
+
+.item-label {
+  font-size: 14px;
+  color: #1D1D1F;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+
+.picker-value {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #F8F9FA;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 15px;
+  color: #1D1D1F;
+}
+
+.picker-value .arrow {
+  font-size: 18px;
+  color: #C7C7CC;
+}
+
+/* 紧凑型单行卡片样式 */
+.sheet-item-compact {
+  margin-bottom: 12px;
+}
+
+.compact-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #F8F9FA;
+  padding: 14px 16px;
+  border-radius: 8px;
+  min-height: 48px;
+}
+
+.compact-label {
+  font-size: 15px;
+  color: #1D1D1F;
+  font-weight: 500;
+  flex-shrink: 0;
+  margin-right: 16px;
+}
+
+.compact-value {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.compact-text {
+  font-size: 14px;
+  color: #1D1D1F;
+  font-weight: 400;
+  margin-right: 8px;
+}
+
+.compact-arrow {
+  font-size: 18px;
+  color: #C7C7CC;
+  font-weight: 300;
+}
+
+.compact-date-result {
+  display: flex;
+  align-items: center;
+}
+
+.compact-days {
+  font-size: 13px;
+  color: #8E8E93;
+  margin-left: 8px;
+}
+
+.compact-placeholder {
+  font-size: 14px;
+  color: #C7C7CC;
+}
+
+.accessories-section {
+  margin-bottom: 20px;
+}
+
+.accessories-list {
+  background: #F8F9FA;
+  border-radius: 8px;
+  padding: 8px 0;
+}
+
+.accessory-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+}
+
+.accessory-info {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.accessory-name {
+  font-size: 15px;
+  color: #1D1D1F;
+  margin-right: 12px;
+}
+
+.accessory-price {
+  font-size: 13px;
+  color: #8E8E93;
+}
+
+.accessory-checkbox {
+  width: 22px;
+  height: 22px;
+  border: 2px solid #C7C7CC;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+}
+
+.checkbox-icon {
+  color: #FFF;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.sheet-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-top: 1px solid #F2F2F7;
+  background: #FFF;
+}
+
+.footer-price {
+  display: flex;
+  align-items: baseline;
+}
+
+.price-label {
+  font-size: 14px;
+  color: #8E8E93;
+  margin-right: 8px;
+}
+
+.price-value {
+  font-size: 24px;
+  font-weight: 600;
+  color: #FF3B30;
+}
+
+.footer-btn {
+  width: 140px;
+  height: 44px;
+  background: linear-gradient(135deg, #4A6FA5 0%, #5A7A9B 100%);
+  color: #FFF;
+  border-radius: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* ============ 全屏日历选择器样式 ============ */
+.calendar-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #F5F5F5;
+  z-index: 3000;
+}
+
+.calendar-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #FFF;
+}
+
+/* 日历头部 */
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  padding-top: 56px; /* 固定56px，适配各种刘海屏 */
+  background: #FFF;
+  border-bottom: 1px solid #F2F2F7;
+  box-sizing: border-box;
+}
+
+.header-back {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.back-icon {
+  font-size: 28px;
+  color: #4A6FA5;
+  font-weight: 300;
+}
+
+.header-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: #1D1D1F;
+}
+
+.header-placeholder {
+  width: 40px;
+}
+
+/* 月份切换器 */
+.month-switcher {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: #FFF;
+}
+
+.month-prev, .month-next {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: #4A6FA5;
+  font-weight: 300;
+}
+
+.month-display {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1D1D1F;
+}
+
+/* 星期标题 */
+.weekday-header {
+  display: flex;
+  padding: 12px 16px;
+  background: #FFF;
+}
+
+.weekday-item {
+  flex: 1;
+  text-align: center;
+  font-size: 13px;
+  color: #8E8E93;
+  font-weight: 500;
+}
+
+/* 日历网格 */
+.calendar-grid {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0 16px;
+  background: #FFF;
+  overflow-y: auto;
+}
+
+.date-item {
+  width: 14.28%;
+  height: 70px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.date-number {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  color: #1D1D1F;
+  border-radius: 50%;
+  position: relative;
+  z-index: 1;
+}
+
+.date-number.is-today {
+  color: #4A6FA5;
+  border: 1px solid #4A6FA5;
+}
+
+.date-number.is-start,
+.date-number.is-end {
+  background: #4A6FA5;
+  color: #FFF;
+  font-weight: 600;
+}
+
+.date-number.is-in-range {
+  background: #E8EEF5;
+  color: #4A6FA5;
+  border-radius: 0;
+}
+
+.date-number.is-past {
+  color: #C7C7CC;
+}
+
+.date-label {
+  font-size: 10px;
+  color: #4A6FA5;
+  margin-top: 2px;
+  font-weight: 500;
+}
+
+.today-label {
+  color: #4A6FA5;
+}
+
+/* 底部操作栏 */
+.calendar-footer {
+  display: flex;
+  align-items: center;
+  padding: 16px 20px;
+  padding-bottom: calc(16px + env(safe-area-inset-bottom));
+  background: #FFF;
+  border-top: 1px solid #F2F2F7;
+}
+
+.selected-info {
+  flex: 1;
+  margin-right: 16px;
+}
+
+.info-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.info-row:last-child {
+  margin-bottom: 0;
+}
+
+.info-row.highlight {
+  margin-top: 4px;
+}
+
+.info-days-text {
+  font-size: 16px;
+  color: #4A6FA5;
+  font-weight: 600;
+}
+
+.info-label {
+  font-size: 13px;
+  color: #8E8E93;
+  margin-right: 8px;
+}
+
+.info-value {
+  font-size: 14px;
+  color: #1D1D1F;
+  font-weight: 500;
+}
+
+.info-placeholder {
+  font-size: 14px;
+  color: #C7C7CC;
+}
+
+.action-buttons {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.reset-btn {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #E5E5E5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+}
+
+.reset-btn.active {
+  background: #FFF;
+  border: 2px solid #4A6FA5;
+  box-shadow: 0 4px 12px rgba(74, 111, 165, 0.2);
+}
+
+.reset-btn.active .btn-icon {
+  color: #4A6FA5;
+}
+
+.confirm-btn {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #E5E5E5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.confirm-btn.active {
+  background: linear-gradient(135deg, #4A6FA5 0%, #5A7A9B 100%);
+  box-shadow: 0 4px 12px rgba(74, 111, 165, 0.3);
+}
+
+.btn-icon {
+  font-size: 24px;
+  color: #FFF;
+  font-weight: bold;
+}
+

@@ -1,0 +1,157 @@
+<view class="page">
+  <view class="navbar" style="padding-top: {{statusBarHeight}}px;">
+    <view class="nav-left">
+      <text class="back-icon" bindtap="goBack">‹</text>
+      <!-- 调试：角色切换按钮 -->
+      <text class="role-switch" bindtap="onSwitchRole">{{currentRole === 'buyer' ? '买' : '卖'}}</text>
+    </view>
+    <view class="nav-title">{{sellerName}}</view>
+    <view class="nav-right"></view>
+  </view>
+
+  <view class="product-card">
+    <image class="product-image" src="{{product.image}}" mode="aspectFill" />
+    <view class="product-info">
+      <view class="product-name">{{product.name}}</view>
+      <view class="product-price"><text class="price-symbol">{{product.currency}}</text><text class="price-number">{{product.price}}</text></view>
+      <view class="pickup-method">{{product.deliveryMethod}}</view>
+      <view class="city-pickup">{{product.cityDisplay}} · {{product.pickupLocation}}</view>
+    </view>
+    <view class="buy-button" bindtap="onBuyNow"><text>立即购买</text></view>
+  </view>
+
+  <!-- 交易预约组件（置顶悬浮） -->
+  <view class="appointment-widget" wx:if="{{appointmentInfo}}">
+    <view class="widget-header">
+      <text class="widget-title">交易预约</text>
+      <view class="status-badge status-{{appointmentInfo.status}}">
+        {{appointmentInfo.statusText}}
+      </view>
+    </view>
+    
+    <view class="widget-content">
+      <view class="info-line">
+        <text class="info-icon">📍</text>
+        <text class="info-text">{{appointmentInfo.location}}</text>
+      </view>
+      <view class="info-line">
+        <text class="info-icon">📅</text>
+        <text class="info-text">{{appointmentInfo.date}} {{appointmentInfo.time}}</text>
+      </view>
+      <view class="modify-count" wx:if="{{appointmentInfo.modifyCount > 0}}">
+        已修改 {{appointmentInfo.modifyCount}} 次
+      </view>
+    </view>
+    
+    <!-- 买家视角（发起者） -->
+    <view class="widget-actions" wx:if="{{appointmentInfo.isMine && appointmentInfo.status === 'pending'}}">
+      <view class="action-btn btn-adjust" bindtap="onAdjustAppointment" wx:if="{{appointmentInfo.modifyCount < 2}}">
+        调整预约
+      </view>
+      <view class="action-btn-disabled" wx:else>
+        已达修改上限
+      </view>
+    </view>
+    
+    <!-- 卖家视角（接受者） - 待确认状态 -->
+    <view class="widget-actions" wx:if="{{!appointmentInfo.isMine && appointmentInfo.status === 'pending'}}">
+      <view class="action-btn btn-confirm" bindtap="onConfirmAppointment">确认</view>
+      <view class="action-btn btn-reject" bindtap="onRejectAppointment">拒绝</view>
+      <view class="action-btn btn-adjust" bindtap="onAdjustAppointment">调整预约</view>
+    </view>
+    
+    <!-- 已确认/已拒绝状态 - 双方都不可操作 -->
+    <view class="widget-result" wx:if="{{appointmentInfo.status !== 'pending'}}">
+      <text class="result-text" wx:if="{{appointmentInfo.status === 'confirmed'}}">✓ 预约已确认</text>
+      <text class="result-text reject" wx:if="{{appointmentInfo.status === 'rejected'}}">✗ 预约已拒绝</text>
+    </view>
+  </view>
+
+  <scroll-view scroll-y class="messages-scroll" scroll-into-view="{{scrollToView}}" scroll-with-animation>
+    <view wx:for="{{messages}}" wx:key="id" class="message-item" id="msg-{{item.id}}">
+      <!-- 系统消息 -->
+      <block wx:if="{{item.isSystem}}">
+        <view class="system-message">
+          <text class="system-text">{{item.content}}</text>
+        </view>
+      </block>
+      <!-- 我的消息 -->
+      <block wx:elif="{{item.isMine}}">
+        <view class="spacer"></view>
+        <view class="message-content message-right-content">
+          <view class="message-bubble bubble-right"><text class="message-text">{{item.content}}</text></view>
+          <view class="message-time">{{item.time}}</view>
+        </view>
+        <image class="msg-avatar right-avatar" src="{{myAvatar}}" mode="aspectFill" />
+      </block>
+      <!-- 对方消息 -->
+      <block wx:else>
+        <image class="msg-avatar left-avatar" src="{{sellerAvatar}}" mode="aspectFill" />
+        <view class="message-content message-left-content">
+          <view class="message-bubble bubble-left"><text class="message-text">{{item.content}}</text></view>
+          <view class="message-time">{{item.time}}</view>
+        </view>
+        <view class="spacer"></view>
+      </block>
+    </view>
+    <view class="bottom-placeholder"></view>
+  </scroll-view>
+
+  <view class="input-bar" style="padding-bottom: calc(8px + env(safe-area-inset-bottom));">
+    <!-- 左侧：预约/键盘切换按钮 -->
+    <view class="appointment-btn" bindtap="onAppointmentToggle">
+      <text wx:if="{{!showAppointmentPanel}}" class="icon-emoji">📅</text>
+      <text wx:else class="icon-emoji">⌨️</text>
+    </view>
+    
+    <view class="input-box">
+      <input class="input-field" value="{{inputText}}" bindinput="onInput" placeholder="想跟TA说点什么..." confirm-type="send" bindconfirm="onSendMessage" maxlength="-1" cursor-spacing="8" />
+    </view>
+    
+    <!-- 右侧：语音和加号 -->
+    <view class="voice-btn" bindtap="onVoiceClick"><text class="voice-icon">🎤</text></view>
+    <view class="add-btn" bindtap="onAddClick"><text class="add-icon">+</text></view>
+  </view>
+
+  <!-- 快捷预约面板 -->
+  <view class="appointment-panel" wx:if="{{showAppointmentPanel}}">
+    <view class="panel-title">快捷预约</view>
+    
+    <!-- 交易地点 -->
+    <view class="panel-section">
+      <view class="section-label">交易地点</view>
+      <picker mode="selector" range="{{locationOptions}}" value="{{selectedLocationIndex}}" bindchange="onLocationChange">
+        <view class="picker-value">
+          {{locationOptions[selectedLocationIndex]}} <text class="arrow">›</text>
+        </view>
+      </picker>
+    </view>
+    
+    <!-- 日期选择 -->
+    <view class="panel-section">
+      <view class="section-label">交易日期</view>
+      <picker mode="date" value="{{selectedDate}}" start="{{todayDate}}" bindchange="onDateChange">
+        <view class="picker-value">
+          {{selectedDate}} <text class="arrow">›</text>
+        </view>
+      </picker>
+    </view>
+    
+    <!-- 取货时间 -->
+    <view class="panel-section">
+      <view class="section-label">取货时间</view>
+      <picker mode="time" value="{{selectedTime}}" bindchange="onTimeChange">
+        <view class="picker-value">
+          {{selectedTime}} <text class="arrow">›</text>
+        </view>
+      </picker>
+    </view>
+    
+    <!-- 发送按钮 -->
+    <view class="panel-send-btn" bindtap="onSendAppointment">
+      <text>发送预约</text>
+    </view>
+  </view>
+</view>
+
+

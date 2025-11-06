@@ -1,0 +1,70 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/profile/index",
+    "pages/profile/edit"
+  ],
+  "subpackages": [
+    {
+      "root": "pages/rental",
+      "pages": ["detail", "confirm", "order-detail", "renew-confirm"]
+    },
+    {
+      "root": "pages/orders",
+      "pages": ["index"]
+    },
+    {
+      "root": "pages/about",
+      "pages": ["index", "agreement", "privacy"]
+    },
+    {
+      "root": "pages/favorites",
+      "pages": ["index"]
+    },
+    {
+      "root": "pages/history",
+      "pages": ["index"]
+    },
+    {
+      "root": "pages/coupons",
+      "pages": ["index"]
+    },
+    {
+      "root": "pages/chat",
+      "pages": ["index"]
+    },
+    {
+      "root": "pages/store",
+      "pages": ["login", "home", "scan", "order-detail"]
+    }
+  ],
+  "preloadRule": {
+    "pages/profile/index": {
+      "packages": ["pages/orders"],
+      "network": "all"
+    },
+    "pages/index/index": {
+      "packages": ["pages/rental"],
+      "network": "all"
+    }
+  },
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationStyle": "custom"
+  },
+  "style": "v2",
+  "renderer": "skyline",
+  "rendererOptions": {
+    "skyline": {
+      "defaultDisplayBlock": true,
+      "defaultContentBox": true,
+      "disableABTest": true,
+      "sdkVersionBegin": "3.0.0",
+      "sdkVersionEnd": "15.255.255"
+    }
+  },
+  "componentFramework": "glass-easel",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}
+

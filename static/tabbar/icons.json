@@ -1,0 +1,6 @@
+{
+  "home": { "default": "/static/tabbar/png/home-outline.png", "active": "/static/tabbar/png/home-filled.png" },
+  "nearby": { "default": "/static/tabbar/png/nearby-outline.png", "active": "/static/tabbar/png/nearby-filled.png" },
+  "message": { "default": "/static/tabbar/png/message-outline.png", "active": "/static/tabbar/png/message-filled.png" },
+  "profile": { "default": "/static/tabbar/png/profile-outline.png", "active": "/static/tabbar/png/profile-filled.png" }
+}

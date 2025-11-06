@@ -1,0 +1,38 @@
+<view class="page">
+  <view class="topbar" style="padding-top: {{statusBarHeight}}px;">
+    <view class="nav-left" bindtap="goBack"><text class="back">‹</text></view>
+    <text class="title">关于我们</text>
+    <view class="nav-right"></view>
+  </view>
+
+  <view class="content">
+    <!-- 顶部 Logo + 版本号 -->
+    <view class="brand">
+      <image class="brand-logo" src="/static/icons/easygoods-logo.png" mode="aspectFit"/>
+      <text class="brand-name">EasyGoods易物</text>
+      <text class="brand-version">v1.0.0</text>
+    </view>
+
+    <!-- 公司简介（直接展示） -->
+    <view class="card">
+      <text class="card-title">公司简介</text>
+      <text class="card-text">EasyGoods 易物致力于为海外中文用户提供“租赁 + 集市”的一站式生活服务。我们聚焦校园与本地社区，连接供需、降低使用成本，让好物被更高效地分享与流通。</text>
+    </view>
+
+    <!-- 下钻项（服务协议 / 隐私政策） -->
+    <view class="list">
+      <view class="list-item" bindtap="goAgreement">
+        <text class="list-text">服务协议</text>
+        <text class="arrow">›</text>
+      </view>
+      <view class="list-item" bindtap="goPrivacy">
+        <text class="list-text">隐私政策</text>
+        <text class="arrow">›</text>
+      </view>
+    </view>
+
+    <view class="bottom-space"></view>
+  </view>
+</view>
+
+
