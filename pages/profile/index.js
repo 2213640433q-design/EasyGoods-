@@ -28,7 +28,10 @@ Page({
     pageSwipeOffset: 0,
     pageSwipeOpacity: 1,
     pageSwipeTransition: '',
-    isPageSwiping: false
+    isPageSwiping: false,
+    
+    // 显示用的手机号（隐藏中间四位）
+    displayNickname: ''
   },
 
   async onLoad() {
@@ -80,15 +83,19 @@ Page({
     
     // 先从本地加载
     const userInfo = wx.getStorageSync('userInfo') || {}
-    this.setData({ userInfo })
+    this.setData({ 
+      userInfo,
+      displayNickname: this.maskPhoneNumber(userInfo.nickname)
+    })
     
     // 加载数据数量
     this.loadCounts()
     
     // 🌟 只有当本地有用户信息时，才执行同步操作
-    // 判断依据：检查是否有头像（登录后一定有头像）
-    if (userInfo && userInfo.avatar) {
-      console.log('📋 检测到本地有用户信息（有头像），开始同步...')
+    // 判断依据：检查是否有手机号（登录后一定有手机号）
+    if (userInfo && userInfo.phone) {
+      console.log('📋 检测到本地有用户信息（有手机号），开始同步...')
+      console.log('  手机号:', userInfo.phone)
       
       // 获取 openid
       await this.getOpenId()
@@ -96,7 +103,7 @@ Page({
       // 从云端同步用户信息
       await this.syncUserInfoFromCloud()
     } else {
-      console.log('⚠️ 本地无用户信息（无头像），显示未登录状态')
+      console.log('⚠️ 本地无用户信息（无手机号），显示未登录状态')
     }
   },
 
@@ -113,12 +120,13 @@ Page({
     console.log('  - userInfo storage:', userInfoStorage)
     console.log('  - openid storage:', openidStorage)
     
-    // 🌟 关键：如果本地存储为空或没有头像，清空页面数据
-    if (!userInfoStorage || Object.keys(userInfoStorage).length === 0 || !userInfoStorage.avatar) {
-      console.log('⚠️ 本地存储为空或无头像，重置为未登录状态')
+    // 🌟 关键：如果本地存储为空或没有手机号，清空页面数据
+    if (!userInfoStorage || Object.keys(userInfoStorage).length === 0 || !userInfoStorage.phone) {
+      console.log('⚠️ 本地存储为空或无手机号，重置为未登录状态')
       this.setData({ 
         userInfo: {},
-        openid: ''
+        openid: '',
+        displayNickname: '点击登录'
       })
       
       // 刷新数据数量
@@ -131,18 +139,21 @@ Page({
     
     // 有本地数据，正常加载
     const userInfo = userInfoStorage
-    this.setData({ userInfo })
+    this.setData({ 
+      userInfo,
+      displayNickname: this.maskPhoneNumber(userInfo.nickname)
+    })
     
     // 刷新数据数量
     this.loadCounts()
     
-    // 🌟 只有当有头像时，才从云端同步（登录后一定有头像）
-    if (userInfo.avatar) {
-      console.log('✅ 检测到本地有用户信息（有头像），从云端同步...')
+    // 🌟 只有当有手机号时，才从云端同步（登录后一定有手机号）
+    if (userInfo.phone) {
+      console.log('✅ 检测到本地有用户信息（有手机号），从云端同步...')
       await this.syncUserInfoFromCloud()
       await this.getOpenId()
     } else {
-      console.log('⚠️ 无头像，保持当前状态（未登录）')
+      console.log('⚠️ 无手机号，保持当前状态（未登录）')
     }
     
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
@@ -196,7 +207,10 @@ Page({
           ...cloudUserInfo
         }
         
-        this.setData({ userInfo: mergedUserInfo })
+        this.setData({ 
+          userInfo: mergedUserInfo,
+          displayNickname: this.maskPhoneNumber(mergedUserInfo.nickname)
+        })
         wx.setStorageSync('userInfo', mergedUserInfo)
         
         console.log('✅ 用户信息同步完成')
@@ -322,152 +336,57 @@ Page({
     }
   },
   
-  // 登录/完善资料
-  async onLogin() {
+  // 🌟 手机号隐藏中间四位
+  maskPhoneNumber(phone) {
+    if (!phone || phone.length < 7) {
+      return phone || '点击登录'
+    }
+    // 格式：182****0561（隐藏中间4位）
+    return phone.substring(0, 3) + '****' + phone.substring(7)
+  },
+  
+  // 跳转到登录页面
+  onLogin() {
+    console.log('👤 跳转到登录页面')
+    wx.navigateTo({
+      url: '/pages/login/index'
+    })
+  },
+  
+  
+  // 退出登录
+  onLogout() {
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
-    console.log('👤 用户点击登录，开始授权流程...')
+    console.log('👋 用户点击退出登录')
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
     
-    try {
-      // 🌟 第一步：通过 getUserProfile 获取用户信息（昵称和头像）
-      console.log('📋 第一步：调用 wx.getUserProfile() 获取用户信息...')
-      
-      const profileRes = await new Promise((resolve, reject) => {
-        wx.getUserProfile({
-          desc: '获取用户信息用于完善用户资料',
-          success: resolve,
-          fail: reject
-        })
-      })
-      
-      console.log('✅ 用户信息获取成功:')
-      console.log('  昵称:', profileRes.userInfo.nickName)
-      console.log('  头像:', profileRes.userInfo.avatarUrl)
-      console.log('  性别:', profileRes.userInfo.gender)
-      console.log('  国家:', profileRes.userInfo.country)
-      console.log('  省份:', profileRes.userInfo.province)
-      console.log('  城市:', profileRes.userInfo.city)
-      
-      const { nickName, avatarUrl, gender, country, province, city } = profileRes.userInfo
-      
-      // 🌟 第二步：获取登录授权码（loginCode）
-      console.log('📋 第二步：调用 wx.login() 获取授权码...')
-      
-      const loginRes = await new Promise((resolve, reject) => {
-        wx.login({
-          success: resolve,
-          fail: reject
-        })
-      })
-      
-      if (loginRes.errMsg !== 'login:ok') {
-        throw new Error('获取授权码失败')
-      }
-      
-      console.log('✅ 授权码获取成功:', loginRes.code)
-      
-      // 🌟 第三步：封装用户信息
-      console.log('📋 第三步：封装用户信息...')
-      console.log('  ⚠️ 注意：登录后不自动使用微信昵称，默认显示 openid')
-      console.log('  ⚠️ 用户可在编辑页面手动修改昵称')
-      
-      // 性别转换：0-未知，1-男，2-女
-      const genderMap = { 0: '保密', 1: '男', 2: '女' }
-      
-      const userInfo = {
-        // 🌟 不保存微信昵称，让页面显示 openid
-        nickname: '',  // 留空，页面会显示 openid
-        avatar: avatarUrl,  // 保存头像
-        gender: genderMap[gender] || '保密',
-        // 从微信信息中读取城市（如果有）
-        city: city || ''
-      }
-      
-      console.log('📦 封装的用户信息（昵称留空）:', userInfo)
-      
-      // 🌟 先保存到本地存储（关键：确保数据先保存）
-      wx.setStorageSync('userInfo', userInfo)
-      
-      // 🌟 再更新页面数据
-      this.setData({ userInfo })
-      
-      // 🌟 第四步：同步到云端（云函数会自动获取 openid）
-      console.log('📋 第四步：调用云函数保存到云端...')
-      console.log('  ⚠️ 注意：使用微信云开发，云函数会自动获取 openid')
-      console.log('  ⚠️ 无需手动调用 jscode2session 接口')
-      
-      wx.showLoading({ title: '登录中...', mask: true })
-      
-      const cloudRes = await wx.cloud.callFunction({
-        name: 'updateUserInfo',
-        data: {
-          // nickname: nickName,  // 🌟 不保存昵称，让用户自己修改
-          avatar: avatarUrl,
-          gender: genderMap[gender] || '保密',
-          city: city || ''
+    wx.showModal({
+      title: '确认退出',
+      content: '退出登录后需要重新授权',
+      confirmText: '确认退出',
+      confirmColor: '#FF3B30',
+      success: (res) => {
+        if (res.confirm) {
+          // 清除本地存储的用户信息
+          wx.removeStorageSync('userInfo')
+          wx.removeStorageSync('openid')
+          wx.removeStorageSync('isLoggedIn')
+          
+          console.log('✅ 本地存储已清除')
+          
+          // 跳转到登录页
+          wx.reLaunch({
+            url: '/pages/login/index'
+          })
+          
+          wx.showToast({
+            title: '已退出登录',
+            icon: 'success',
+            duration: 1500
+          })
         }
-      })
-      
-      wx.hideLoading()
-      
-      console.log('☁️ 云函数返回结果:', cloudRes.result)
-      
-      if (cloudRes.result.success) {
-        console.log('✅ 用户信息已保存到云端')
-        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
-        console.log('🎉 登录流程完成！')
-        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
-        
-        // 如果用户选择了城市，同步到首页
-        if (city) {
-          wx.setStorageSync('CITY_NAME', city)
-          console.log('✅ 城市已同步到首页:', city)
-        }
-        
-        wx.showToast({
-          title: '登录成功',
-          icon: 'success',
-          duration: 2000
-        })
-        
-        // 🌟 刷新页面数据
-        await this.syncUserInfoFromCloud()
-        await this.getOpenId()
-        
-        // 🌟 重新加载数据数量（关键！）
-        console.log('📊 登录成功，重新加载数据数量...')
-        await this.loadCounts()
-        console.log('✅ 数据数量已刷新')
-        
-      } else {
-        throw new Error(cloudRes.result.message || '保存失败')
       }
-      
-    } catch (error) {
-      console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
-      console.error('❌ 登录失败:', error)
-      console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
-      
-      wx.hideLoading()
-      
-      if (error.errMsg && error.errMsg.includes('getUserProfile:fail auth deny')) {
-        // 用户拒绝授权
-        console.log('⚠️ 用户拒绝了授权')
-        wx.showToast({
-          title: '您拒绝了授权',
-          icon: 'none',
-          duration: 2000
-        })
-      } else {
-        // 其他错误
-        console.error('⚠️ 其他错误:', error.message)
-        wx.showModal({
-          title: '登录失败',
-          content: error.message || '网络错误，请稍后重试',
-          showCancel: false
-        })
-      }
-    }
+    })
   },
   
   goEditProfile() {
@@ -475,8 +394,8 @@ Page({
   },
   
   onShortcut(e) {
-    // 🔐 数据隔离：检查是否已登录
-    const isLoggedIn = !!(this.data.userInfo && this.data.userInfo.avatar)
+    // 🔐 数据隔离：检查是否已登录（基于手机号判断）
+    const isLoggedIn = !!(this.data.userInfo && this.data.userInfo.phone)
     
     if (!isLoggedIn) {
       console.log('⚠️ 用户未登录，提示先登录')
@@ -487,7 +406,7 @@ Page({
         cancelText: '取消',
         success: (res) => {
           if (res.confirm) {
-            // 触发登录
+            // 跳转到登录页
             this.onLogin()
           }
         }
@@ -505,15 +424,20 @@ Page({
   onTrade(e) {
     const key = e.currentTarget.dataset.key
     const map = {
-      'address': '收货地址',
+      'hosting': '闲置托管',
       'verify': '实名认证',
       'deposit': '我的押金',
       'service': '在线客服'
     }
     
-    // 在线客服 - 跳转到消息页面
+    // 在线客服 - 跳转到客服咨询页面（无商品参数）
     if (key === 'service') {
-      return wx.reLaunch({ url: '/pages/message/message' })
+      return wx.navigateTo({ url: '/pages/customer-service/index' })
+    }
+    
+    // 闲置托管 - 跳转到托管管理页面
+    if (key === 'hosting') {
+      return wx.navigateTo({ url: '/pages/hosting/manage/index' })
     }
     
     // 其他功能开发中
@@ -542,6 +466,14 @@ Page({
         url: '/pages/store/login'
       })
     }
+  },
+
+  // 🖼️ 跳转到商品图片管理
+  goProductImageManage() {
+    console.log('🖼️ 跳转到商品图片管理')
+    wx.navigateTo({
+      url: '/pages/admin/product-images'
+    })
   },
   
   goAllOrders() {
@@ -670,6 +602,7 @@ Page({
     if (e.touches && e.touches.length > 0) {
       this.pageTouchStartX = e.touches[0].pageX
       this.pageTouchStartY = e.touches[0].pageY
+      this.swipeDirection = null  // 重置滑动方向
       this.setData({
         isPageSwiping: false,
         pageSwipeTransition: ''
@@ -686,30 +619,41 @@ Page({
     const deltaX = touchX - this.pageTouchStartX
     const deltaY = touchY - this.pageTouchStartY
     
-    // 判断是否开始水平滑动
-    if (!this.data.isPageSwiping && Math.abs(deltaX) > 10) {
+    // 🎯 方向锁定机制：首次判断滑动方向后锁定
+    if (!this.swipeDirection && (Math.abs(deltaX) > 5 || Math.abs(deltaY) > 5)) {
+      // 判断是水平还是垂直滑动
       if (Math.abs(deltaX) > Math.abs(deltaY) * 1.5) {
-        this.setData({ isPageSwiping: true })
+        this.swipeDirection = 'horizontal'  // 水平滑动
+      } else if (Math.abs(deltaY) > Math.abs(deltaX) * 1.5) {
+        this.swipeDirection = 'vertical'    // 垂直滑动
       }
     }
     
-    // iOS风格跟手效果
-    if (this.data.isPageSwiping) {
-      // 只允许向右滑动（切换到首页）
-      const damping = deltaX > 0 ? 0.5 : 0.2  // 向右阻尼小，向左阻尼大
-      const offset = deltaX * damping
+    // 🎯 只有明确的水平滑动才触发页面切换
+    if (this.swipeDirection === 'horizontal') {
+      if (!this.data.isPageSwiping && Math.abs(deltaX) > 10) {
+        this.setData({ isPageSwiping: true })
+      }
       
-      // 透明度变化
-      const maxOffset = 150
-      const opacityChange = Math.min(Math.abs(offset) / maxOffset, 0.2)
-      const opacity = 1 - opacityChange
-      
-      this.setData({
-        pageSwipeOffset: offset,
-        pageSwipeOpacity: opacity,
-        pageSwipeTransition: ''
-      })
+      // iOS风格跟手效果
+      if (this.data.isPageSwiping) {
+        // 只允许向右滑动（切换到首页）
+        const damping = deltaX > 0 ? 0.5 : 0.2  // 向右阻尼小，向左阻尼大
+        const offset = deltaX * damping
+        
+        // 透明度变化
+        const maxOffset = 150
+        const opacityChange = Math.min(Math.abs(offset) / maxOffset, 0.2)
+        const opacity = 1 - opacityChange
+        
+        this.setData({
+          pageSwipeOffset: offset,
+          pageSwipeOpacity: opacity,
+          pageSwipeTransition: ''
+        })
+      }
     }
+    // 🎯 如果是垂直滑动，不做任何处理，让scroll-view接管
   },
 
   // 页面滑动切换 - 触摸结束（iOS风格动画）
@@ -764,6 +708,20 @@ Page({
       pageSwipeOffset: 0,
       pageSwipeOpacity: 1,
       pageSwipeTransition: ''
+    })
+  },
+  
+  // 跳转到用户协议
+  goAgreement() {
+    wx.navigateTo({
+      url: '/pages/about/agreement'
+    })
+  },
+  
+  // 跳转到隐私政策
+  goPrivacy() {
+    wx.navigateTo({
+      url: '/pages/about/privacy'
     })
   }
 })

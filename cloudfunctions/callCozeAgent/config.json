@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "openapi": [
+      "wxacode.get",
+      "wxacode.getUnlimited",
+      "customerServiceMessage.send"
+    ]
+  },
+  "triggers": [],
+  "timeout": 20
+}
+

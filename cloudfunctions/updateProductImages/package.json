@@ -1,0 +1,10 @@
+{
+  "name": "updateProductImages",
+  "version": "1.0.0",
+  "description": "更新商品图片（拍摄样片和产品介绍）",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}
+

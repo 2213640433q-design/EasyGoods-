@@ -1,6 +1,6 @@
 <view class="page">
   <!-- 顶部导航栏 -->
-  <view class="topbar" style="padding-top: {{statusBarHeight}}px; height: {{totalNavHeight}}px;">
+  <view class="topbar" style="padding-top: {{statusBarHeight}}px;">
     <view class="topbar-content">
       <view class="nav-left" bindtap="goBack"><text class="back">‹</text></view>
       <text class="title">全部订单</text>

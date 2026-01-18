@@ -140,6 +140,7 @@ exports.main = async (event, context) => {
         // 详细信息
         description: product.description || '',
         accessories: product.accessories || '',
+        freeAccessories: product.freeAccessories || '',  /* ✅ 附赠配件 */
         
         // 规格参数（已处理）
         specs: specs,
@@ -161,6 +162,7 @@ exports.main = async (event, context) => {
         // 其他信息
         comparisonImages: product.comparisonImages || [],
         sampleImages: product.sampleImages || [],
+        introImage: product.introImage || '',  /* ✅ 产品介绍长图 */
         startRent: product.startRent || '自取0天起租'
       },
       openid: wxContext.OPENID

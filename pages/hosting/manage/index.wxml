@@ -1,0 +1,129 @@
+<!-- 托管管理中心页面 -->
+<view class="page">
+  <!-- 顶部导航栏 -->
+  <view class="navbar" style="padding-top: {{statusBarHeight}}px;">
+    <view class="nav-content">
+      <view class="nav-back" bindtap="goBack">
+        <text class="back-icon">‹</text>
+      </view>
+      <view class="nav-title">我的托管</view>
+      <view class="nav-placeholder"></view>
+    </view>
+  </view>
+
+  <scroll-view class="content" scroll-y style="padding-top: {{totalNavHeight}}px;">
+    <!-- 统计卡片 -->
+    <view class="stats-card">
+      <view class="stats-title">托管概览</view>
+      <view class="stats-grid">
+        <view class="stat-item">
+          <text class="stat-value">{{stats.deviceCount}}</text>
+          <text class="stat-label">托管设备</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-value">£{{stats.totalRevenue}}</text>
+          <text class="stat-label">累计收益</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-value">£{{stats.monthRevenue}}</text>
+          <text class="stat-label">本月收益</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- Tab 切换 -->
+    <view class="tabs">
+      <view class="tab-item {{currentTab === 'pending' ? 'active' : ''}}" bindtap="switchTab" data-tab="pending">
+        审核中
+        <view class="badge" wx:if="{{pendingCount > 0}}">{{pendingCount}}</view>
+      </view>
+      <view class="tab-item {{currentTab === 'online' ? 'active' : ''}}" bindtap="switchTab" data-tab="online">
+        已上架
+        <view class="badge" wx:if="{{onlineCount > 0}}">{{onlineCount}}</view>
+      </view>
+      <view class="tab-item {{currentTab === 'rejected' ? 'active' : ''}}" bindtap="switchTab" data-tab="rejected">
+        已拒绝
+      </view>
+      <view class="tab-item {{currentTab === 'recalled' ? 'active' : ''}}" bindtap="switchTab" data-tab="recalled">
+        已召回
+      </view>
+    </view>
+
+    <!-- 设备列表 -->
+    <view class="device-list">
+      <!-- 加载中 -->
+      <view class="loading" wx:if="{{loading}}">
+        <text>加载中...</text>
+      </view>
+
+      <!-- 空状态 -->
+      <view class="empty" wx:elif="{{devices.length === 0}}">
+        <text class="empty-icon">📦</text>
+        <text class="empty-text">暂无设备</text>
+        <button class="btn-add-device" bindtap="goAddDevice">+ 添加托管设备</button>
+      </view>
+
+      <!-- 设备卡片 -->
+      <view class="device-card" wx:for="{{devices}}" wx:key="_id" bindtap="viewDeviceDetail" data-id="{{item._id}}">
+        <view class="device-image">
+          <image src="{{item.images[0]}}" mode="aspectFill"/>
+        </view>
+        
+        <view class="device-info">
+          <view class="device-header">
+            <text class="device-name">{{item.deviceName}}</text>
+            <view class="status-badge {{item.status}}">{{statusMap[item.status]}}</view>
+          </view>
+          
+          <view class="device-meta">
+            <text class="meta-item">{{item.subCategory}}</text>
+            <text class="separator">|</text>
+            <text class="meta-item">日租 £{{item.dailyRent}}</text>
+            <text class="separator">|</text>
+            <text class="meta-item">押金 £{{item.depositAmount}}</text>
+          </view>
+
+          <!-- 审核中 -->
+          <view class="device-status" wx:if="{{item.status === 'pending'}}">
+            <text class="status-text">提交时间：{{item.submitTime}}</text>
+          </view>
+
+          <!-- 已上架 -->
+          <view class="device-status" wx:elif="{{item.status === 'online'}}">
+            <view class="revenue-info">
+              <text class="revenue-label">本月收益</text>
+              <text class="revenue-value">£{{item.monthRevenue || 0}}</text>
+              <text class="revenue-label">| 出租率 {{item.rentedCount || 0}}次</text>
+            </view>
+          </view>
+
+          <!-- 已拒绝 -->
+          <view class="device-status" wx:elif="{{item.status === 'rejected'}}">
+            <text class="reject-reason">拒绝原因：{{item.reviewComment}}</text>
+          </view>
+
+          <!-- 已召回 -->
+          <view class="device-status" wx:elif="{{item.status === 'recalled'}}">
+            <text class="status-text">召回时间：{{item.offlineTime}}</text>
+          </view>
+
+          <!-- 操作按钮 -->
+          <view class="device-actions">
+            <button class="action-btn" wx:if="{{item.status === 'online'}}" catchtap="viewRevenue" data-id="{{item._id}}">查看收益</button>
+            <button class="action-btn danger" wx:if="{{item.status === 'online'}}" catchtap="recallDevice" data-id="{{item._id}}" data-name="{{item.deviceName}}">召回设备</button>
+            <button class="action-btn" wx:if="{{item.status === 'rejected'}}" catchtap="resubmit" data-id="{{item._id}}">修改重提</button>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 底部占位 -->
+    <view class="bottom-placeholder"></view>
+  </scroll-view>
+
+  <!-- 底部添加按钮 - 始终显示 -->
+  <view class="fab" bindtap="goAddDevice">
+    <text class="fab-icon">+</text>
+  </view>
+</view>
+

@@ -1,0 +1,640 @@
+/* 闲置托管提交页面样式 */
+page {
+  height: 100vh;
+  background: #F5F5F7;
+}
+
+.page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 导航栏 */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: #FFF;
+  z-index: 9999;
+  border-bottom: 1px solid #E5E5EA;
+}
+
+.nav-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 44px;
+  padding: 0 16px;
+}
+
+.nav-back, .nav-placeholder {
+  width: 60px;
+}
+
+.nav-back {
+  display: flex;
+  align-items: center;
+}
+
+.back-icon {
+  font-size: 28px;
+  color: #1D1D1F;
+  font-weight: 500;
+}
+
+.nav-title {
+  flex: 1;
+  text-align: center;
+  font-size: 17px;
+  font-weight: 600;
+  color: #1D1D1F;
+}
+
+/* 滚动内容 */
+.content {
+  flex: 1;
+  padding-bottom: 100px;
+}
+
+/* 步骤指示器 */
+.steps-indicator {
+  background: #FFF;
+  padding: 16px 16px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin: 8px 12px 12px 12px;
+  border-radius: 12px;
+}
+
+.step-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+}
+
+.step-number {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #E5E7EB;
+  border: 2px solid #E5E7EB;
+  color: #8E8E93;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  position: relative;
+  z-index: 2;
+}
+
+/* 进行中的节点 - 蓝色背景 */
+.step-item.active .step-number {
+  background: #4A6FA5;
+  border-color: #4A6FA5;
+  color: #FFF;
+}
+
+/* 已完成的节点 - 蓝色背景 + 白色✓ */
+.step-item.completed .step-number {
+  background: #4A6FA5;
+  border-color: #4A6FA5;
+  color: #FFF;
+}
+
+.step-text {
+  font-size: 12px;
+  color: #8E8E93;
+}
+
+.step-item.active .step-text {
+  color: #4A6FA5;
+  font-weight: 600;
+}
+
+.step-item.completed .step-text {
+  color: #4A6FA5;
+}
+
+/* 连接线 */
+.step-line {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  width: 100%;
+  height: 2px;
+  background: #E5E7EB;
+  z-index: 1;
+}
+
+/* 已完成步骤的连接线 - 蓝色 */
+.step-line.active {
+  background: #4A6FA5;
+}
+
+/* 最后一个步骤不显示连接线 */
+.step-item:last-child .step-line {
+  display: none;
+}
+
+/* 步骤内容 */
+.step-content {
+  padding: 0 12px;
+}
+
+/* 卡片 */
+.section-card {
+  background: #FFF;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.card-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1D1D1F;
+  margin-bottom: 16px;
+}
+
+.subtitle {
+  font-size: 12px;
+  color: #8E8E93;
+  font-weight: 400;
+  margin-left: 4px;
+}
+
+.required {
+  color: #FF3B30;
+  margin-left: 2px;
+}
+
+/* 分类选择 */
+.category-selector {
+  margin-bottom: 16px;
+}
+
+.category-label {
+  font-size: 14px;
+  color: #8E8E93;
+  margin-bottom: 8px;
+}
+
+.category-value {
+  font-size: 16px;
+  color: #4A6FA5;
+  font-weight: 600;
+}
+
+.sub-category-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.sub-category-item {
+  padding: 10px 16px;
+  background: #F5F5F7;
+  border-radius: 8px;
+  border: 2px solid transparent;
+}
+
+.sub-category-item.selected {
+  background: #E8F4FF;
+  border-color: #4A6FA5;
+}
+
+.category-text {
+  font-size: 14px;
+  color: #1D1D1F;
+}
+
+/* 表单项 */
+.form-item {
+  margin-bottom: 20px;
+}
+
+.label {
+  font-size: 14px;
+  color: #1D1D1F;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.input {
+  width: 100%;
+  height: 44px;
+  background: #F5F5F7;
+  border-radius: 8px;
+  padding: 0 12px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.input-with-unit {
+  display: flex;
+  align-items: center;
+  background: #F5F5F7;
+  border-radius: 8px;
+  padding: 0 12px;
+  height: 44px;
+}
+
+.unit {
+  font-size: 14px;
+  color: #1D1D1F;
+  margin-right: 4px;
+}
+
+.picker {
+  height: 44px;
+  background: #F5F5F7;
+  border-radius: 8px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: #1D1D1F;
+}
+
+.hint {
+  margin-top: 4px;
+  font-size: 12px;
+}
+
+.hint-text {
+  color: #8E8E93;
+}
+
+.error-text {
+  color: #FF3B30;
+}
+
+/* 使用状况 */
+.condition-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.condition-item {
+  padding: 8px 12px;
+  background: #F5F5F7;
+  border-radius: 6px;
+  font-size: 13px;
+  border: 1px solid transparent;
+}
+
+.condition-item.selected {
+  background: #E8F4FF;
+  border-color: #4A6FA5;
+  color: #4A6FA5;
+}
+
+/* 规格参数 */
+.spec-list {
+  margin-bottom: 12px;
+}
+
+.spec-item {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+  align-items: center;
+}
+
+.spec-label, .spec-value {
+  flex: 1;
+  height: 40px;
+  background: #F5F5F7;
+  border-radius: 6px;
+  padding: 0 10px;
+  font-size: 13px;
+}
+
+.spec-delete {
+  width: 28px;
+  height: 28px;
+  background: #FF3B30;
+  color: #FFF;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.add-spec-btn {
+  padding: 10px;
+  text-align: center;
+  color: #4A6FA5;
+  font-size: 14px;
+  border: 1px dashed #4A6FA5;
+  border-radius: 6px;
+}
+
+/* 配件清单 */
+.accessories-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.accessory-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.accessory-text {
+  font-size: 14px;
+  color: #1D1D1F;
+}
+
+.quantity-input {
+  width: 60px;
+  height: 32px;
+  background: #F5F5F7;
+  border-radius: 4px;
+  padding: 0 8px;
+  font-size: 13px;
+  margin-left: auto;
+}
+
+.custom-accessory {
+  margin-top: 8px;
+}
+
+/* 图片上传 */
+.image-upload-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.image-item {
+  width: 100px;
+  height: 100px;
+  position: relative;
+}
+
+.uploaded-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  background: #F5F5F7;
+}
+
+.image-delete {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 24px;
+  height: 24px;
+  background: #FF3B30;
+  color: #FFF;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.image-upload-btn {
+  width: 100px;
+  height: 100px;
+  background: #F5F5F7;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed #C7C7CC;
+}
+
+.upload-icon {
+  font-size: 32px;
+  color: #8E8E93;
+  margin-bottom: 4px;
+}
+
+.upload-text {
+  font-size: 12px;
+  color: #8E8E93;
+}
+
+.tip-text {
+  font-size: 12px;
+  color: #8E8E93;
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+/* 文本域 */
+.textarea {
+  width: 100%;
+  min-height: 100px;
+  background: #F5F5F7;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.char-count {
+  text-align: right;
+  font-size: 12px;
+  color: #8E8E93;
+  margin-top: 4px;
+}
+
+/* 押金选项 */
+.deposit-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.deposit-option {
+  padding: 16px;
+  background: #F5F5F7;
+  border-radius: 12px;
+  border: 2px solid transparent;
+}
+
+.deposit-option.selected {
+  background: #E8F4FF;
+  border-color: #4A6FA5;
+}
+
+.option-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.option-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1D1D1F;
+}
+
+.recommend-tag {
+  padding: 2px 8px;
+  background: #FF9500;
+  color: #FFF;
+  font-size: 11px;
+  border-radius: 4px;
+}
+
+.option-amount {
+  font-size: 20px;
+  font-weight: 700;
+  color: #4A6FA5;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.option-tip {
+  font-size: 12px;
+  color: #8E8E93;
+}
+
+/* 租金建议 */
+.rent-suggestion {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 16px;
+}
+
+.rent-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.rent-label {
+  font-size: 13px;
+  color: #8E8E93;
+}
+
+.rent-range {
+  font-size: 14px;
+  color: #4A6FA5;
+  font-weight: 600;
+}
+
+.rent-recommendation {
+  text-align: center;
+  padding: 12px;
+  background: #FFF9E6;
+  border-radius: 8px;
+  color: #FF9500;
+  font-size: 14px;
+}
+
+/* 计算结果 */
+.calc-result {
+  margin-top: 16px;
+  padding: 16px;
+  background: #F8F9FA;
+  border-radius: 8px;
+}
+
+.result-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.result-item:last-child {
+  margin-bottom: 0;
+}
+
+.result-label {
+  font-size: 14px;
+  color: #8E8E93;
+}
+
+.result-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: #4A6FA5;
+}
+
+/* 收益预估 */
+.revenue-forecast {
+  background: linear-gradient(135deg, #E8F4FF 0%, #F0F9FF 100%);
+  border: 1px solid #4A6FA5;
+}
+
+.forecast-text {
+  font-size: 14px;
+  color: #1D1D1F;
+  line-height: 1.6;
+}
+
+.revenue-amount {
+  font-size: 20px;
+  font-weight: 700;
+  color: #34C759;
+  margin: 0 4px;
+}
+
+.forecast-note {
+  font-size: 12px;
+  color: #8E8E93;
+  margin-top: 8px;
+}
+
+/* 底部按钮栏 */
+.bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #FFF;
+  padding: 12px 16px;
+  padding-bottom: calc(12px + env(safe-area-inset-bottom));
+  border-top: 1px solid #E5E5EA;
+  display: flex;
+  gap: 12px;
+  z-index: 9998;
+}
+
+.btn-primary, .btn-secondary {
+  flex: 1;
+  height: 48px;
+  border-radius: 24px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+}
+
+.btn-primary {
+  background: #4A6FA5;
+  color: #FFF;
+}
+
+.btn-primary:disabled {
+  background: #C7C7CC;
+  color: #FFF;
+}
+
+.btn-secondary {
+  background: #F5F5F7;
+  color: #1D1D1F;
+}
+
+.btn-secondary:active {
+  background: #E5E5EA;
+}
+

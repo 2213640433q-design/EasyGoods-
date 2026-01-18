@@ -15,7 +15,9 @@ Page({
       city: '',
       postcode: '',
       phone: ''
-    }
+    },
+    
+    maskedPhone: ''  // 隐藏中间四位的手机号
   },
 
   async onLoad() {
@@ -70,10 +72,22 @@ Page({
     
     // 先从本地存储读取
     const localUserInfo = wx.getStorageSync('userInfo') || {}
-    this.setData({ userInfo: localUserInfo })
+    this.setData({ 
+      userInfo: localUserInfo,
+      maskedPhone: this.maskPhoneNumber(localUserInfo.phone)
+    })
     
     // 然后从云端加载最新数据
     await this.loadUserInfoFromCloud()
+  },
+  
+  // 🌟 手机号隐藏中间四位
+  maskPhoneNumber(phone) {
+    if (!phone || phone.length < 7) {
+      return phone || '未设置'
+    }
+    // 格式：182****0561（隐藏中间4位）
+    return phone.substring(0, 3) + '****' + phone.substring(7)
   },
   
   // 🌟 从云端加载用户信息
@@ -105,7 +119,10 @@ Page({
           ...cloudUserInfo
         }
         
-        this.setData({ userInfo: mergedUserInfo })
+        this.setData({ 
+          userInfo: mergedUserInfo,
+          maskedPhone: this.maskPhoneNumber(mergedUserInfo.phone)
+        })
         
         // 更新本地存储
         wx.setStorageSync('userInfo', mergedUserInfo)
@@ -290,21 +307,19 @@ Page({
   },
 
   // 编辑性别
-  editGender() {
-    wx.showActionSheet({
-      itemList: ['男', '女', '保密'],
-      success: async (res) => {
-        const genders = ['男', '女', '保密']
-        const selectedGender = genders[res.tapIndex]
-        const userInfo = { ...this.data.userInfo, gender: selectedGender }
-        this.setData({ userInfo })
-        wx.setStorageSync('userInfo', userInfo)
-        wx.showToast({ title: '已保存', icon: 'success', duration: 1000 })
-        
-        // 🌟 自动保存到云端
-        await this.saveToCloud({ gender: selectedGender })
-      }
-    })
+  // 性别选择（通过按钮点击触发）
+  async onGenderSelect(e) {
+    const gender = e.currentTarget.dataset.gender
+    console.log('✏️ 用户选择性别:', gender)
+    
+    const userInfo = { ...this.data.userInfo, gender }
+    this.setData({ userInfo })
+    wx.setStorageSync('userInfo', userInfo)
+    
+    wx.showToast({ title: '已保存', icon: 'success', duration: 1000 })
+    
+    // 🌟 自动保存到云端
+    await this.saveToCloud({ gender })
   },
 
   // 编辑生日
@@ -397,22 +412,13 @@ Page({
 
   // 编辑手机号
   editPhone() {
+    console.log('ℹ️ 查看手机号')
+    
     wx.showModal({
-      title: '编辑手机号',
-      editable: true,
-      placeholderText: '例如：+44 7389003857',
-      content: this.data.userInfo.phone || '',
-      success: async (res) => {
-        if (res.confirm && res.content) {
-          const userInfo = { ...this.data.userInfo, phone: res.content }
-          this.setData({ userInfo })
-          wx.setStorageSync('userInfo', userInfo)
-          wx.showToast({ title: '已保存', icon: 'success', duration: 1000 })
-          
-          // 🌟 自动保存到云端
-          await this.saveToCloud({ phone: res.content })
-        }
-      }
+      title: '手机号',
+      content: `您的手机号：${this.data.userInfo.phone || '未设置'}\n\n手机号是登录时授权获取的，如需修改请退出登录后重新授权。`,
+      showCancel: false,
+      confirmText: '知道了'
     })
   },
   

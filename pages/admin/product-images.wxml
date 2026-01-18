@@ -1,0 +1,81 @@
+<view class="page">
+  <!-- 顶部导航栏 -->
+  <view class="topbar" style="padding-top: {{statusBarHeight}}px; height: {{totalNavHeight}}px;">
+    <view class="topbar-content">
+      <view class="nav-left" bindtap="goBack">
+        <text class="back">‹</text>
+      </view>
+      <text class="title">商品图片管理</text>
+      <view class="nav-right"></view>
+    </view>
+  </view>
+
+  <!-- 内容区域 -->
+  <scroll-view scroll-y class="content" style="margin-top: {{totalNavHeight}}px;">
+    
+    <!-- 选择商品 -->
+    <view class="section">
+      <view class="section-title">1. 选择商品</view>
+      <picker mode="selector" range="{{productNames}}" value="{{selectedProductIndex}}" bindchange="onProductChange">
+        <view class="picker-row">
+          <text class="picker-label">当前商品</text>
+          <view class="picker-value">
+            <text>{{currentProductName || '请选择商品'}}</text>
+            <text class="arrow">›</text>
+          </view>
+        </view>
+      </picker>
+    </view>
+
+    <!-- 拍摄样片管理 -->
+    <view class="section" wx:if="{{currentProduct}}">
+      <view class="section-title">2. 拍摄样片（多张）</view>
+      
+      <!-- 已上传的样片 -->
+      <view class="images-grid" wx:if="{{sampleImages.length > 0}}">
+        <view class="image-item" wx:for="{{sampleImages}}" wx:key="index">
+          <image class="preview-image" src="{{item}}" mode="aspectFill"/>
+          <view class="delete-icon" catchtap="onDeleteSample" data-index="{{index}}">×</view>
+        </view>
+      </view>
+      
+      <!-- 上传按钮 -->
+      <view class="upload-btn" bindtap="onUploadSample">
+        <text class="upload-icon">📤</text>
+        <text class="upload-text">上传样片图片</text>
+      </view>
+    </view>
+
+    <!-- 产品介绍长图管理 -->
+    <view class="section" wx:if="{{currentProduct}}">
+      <view class="section-title">3. 产品介绍长图（一张）</view>
+      
+      <!-- 已上传的介绍长图 -->
+      <view class="intro-preview" wx:if="{{introImage}}">
+        <image class="intro-image" src="{{introImage}}" mode="widthFix"/>
+        <view class="delete-icon" catchtap="onDeleteIntro">×</view>
+      </view>
+      
+      <!-- 上传按钮 -->
+      <view class="upload-btn" bindtap="onUploadIntro">
+        <text class="upload-icon">📤</text>
+        <text class="upload-text">上传介绍长图</text>
+      </view>
+    </view>
+
+    <!-- 保存按钮 -->
+    <view class="save-section" wx:if="{{currentProduct}}">
+      <button class="save-btn" bindtap="onSave">保存并更新到云端</button>
+    </view>
+
+    <!-- 使用说明 -->
+    <view class="help-section">
+      <view class="help-title">💡 使用说明</view>
+      <view class="help-item">• 拍摄样片：展示商品实拍效果，建议上传3-6张</view>
+      <view class="help-item">• 产品介绍：包含文字说明的长图，建议宽度750px</view>
+      <view class="help-item">• 图片会自动上传到云存储并关联到商品</view>
+    </view>
+
+  </scroll-view>
+</view>
+

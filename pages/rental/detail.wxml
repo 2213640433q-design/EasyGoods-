@@ -1,33 +1,22 @@
-<!-- 顶部导航栏（固定） -->
-<view class="navbar" style="padding-top: {{statusBarHeight}}px;">
-  <view class="navbar-content" style="height: {{navBarHeight}}px;">
-    <view class="nav-back" bindtap="goBack">
-      <text class="back-icon">‹</text>
-    </view>
-    <view class="nav-title">器材详情</view>
-    <view class="nav-actions"></view>
-  </view>
-</view>
-
 <!-- 可滚动内容区 -->
 <scroll-view scroll-y class="rental-detail-scroll" enable-back-to-top>
-  <!-- 顶部Logo -->
-  <view class="top-logo">
-    <text class="logo-text">🎬 兰拓科技 IRENTALS</text>
-  </view>
-
-  <!-- 商品图片轮播 -->
+  <!-- 商品图片轮播（顶部） -->
   <view class="product-images">
+    <!-- 浮动返回按钮（左上角） -->
+    <view class="floating-back-btn" style="top: {{statusBarHeight + 8}}px;" bindtap="goBack">
+      <text class="back-icon">‹</text>
+    </view>
+    
+    <!-- 图片轮播 -->
     <swiper class="swiper" indicator-dots="{{false}}" autoplay circular bindchange="onImageChange">
       <swiper-item wx:for="{{product.images}}" wx:key="index">
         <image class="product-main-image" src="{{item}}" mode="aspectFill"></image>
       </swiper-item>
     </swiper>
+    
+    <!-- 图片指示器（右下角） -->
     <view class="image-indicator">{{currentImageIndex + 1}}/{{product.images.length}}</view>
   </view>
-
-  <!-- 提示信息（按钮风格） -->
-  <view class="alert-button">机身颜色随机发货</view>
 
   <!-- 商品主要信息 -->
   <view class="product-main-info">
@@ -58,6 +47,13 @@
       </view>
       <view class="option-label">租{{item.days}}天</view>
     </view>
+    
+    <!-- 计价规则按钮 -->
+    <view class="price-detail-btn" bindtap="showPriceDetail">
+      <text class="detail-label">计价</text>
+      <text class="detail-label">规则</text>
+      <text class="detail-arrow">›</text>
+    </view>
   </view>
 
   <!-- 起租说明 -->
@@ -85,7 +81,7 @@
   <!-- Tab切换 -->
   <view class="detail-tabs">
     <view class="tab-item" 
-          wx:for="{{['拍摄样片', '产品介绍']}}" 
+          wx:for="{{['拍摄样片', '产品介绍', '租赁须知']}}" 
           wx:key="index"
           data-index="{{index}}"
           bindtap="onTabChange">
@@ -108,37 +104,68 @@
 
     <!-- 产品介绍 -->
     <view wx:if="{{currentTab === 1}}" class="tab-panel">
-      <!-- 温馨提示卡片 -->
-      <view class="warning-card">
-        <view class="warning-icon">⚠️</view>
-        <view class="warning-content">
-          <view class="warning-title">温馨提示：</view>
-          <view class="warning-text">{{product.description}}</view>
+      <!-- 产品介绍长图（含文字介绍） -->
+      <image class="product-intro-longimage" 
+             src="{{product.introImage || product.promoImage || '/static/placeholder/intro.png'}}" 
+             mode="widthFix"></image>
+    </view>
+
+    <!-- 租赁须知 -->
+    <view wx:if="{{currentTab === 2}}" class="tab-panel rental-notice-panel">
+      <view class="notice-section">
+        <view class="notice-title">📋 租赁流程</view>
+        <view class="notice-item">
+          <text class="notice-num">1.</text>
+          <text class="notice-text">选择商品及租期，支付押金和租金</text>
+        </view>
+        <view class="notice-item">
+          <text class="notice-num">2.</text>
+          <text class="notice-text">我们将在1-2个工作日内发货</text>
+        </view>
+        <view class="notice-item">
+          <text class="notice-num">3.</text>
+          <text class="notice-text">收到设备后开始计算租期</text>
+        </view>
+        <view class="notice-item">
+          <text class="notice-num">4.</text>
+          <text class="notice-text">租期结束前寄回设备，归还当天不计租期</text>
         </view>
       </view>
 
-      <!-- 产品对比图（只在有对比图时显示） -->
-      <view class="comparison-section" wx:if="{{product.comparisonImages && product.comparisonImages.length > 0}}">
-        <view class="section-title">产品对比</view>
-        <image wx:for="{{product.comparisonImages}}" wx:key="index" 
-               class="comparison-image" 
-               src="{{item}}" 
-               mode="widthFix"></image>
-      </view>
-
-      <!-- 产品参数 -->
-      <view class="specs-section">
-        <view class="spec-row" wx:for="{{product.specs}}" wx:key="label">
-          <text class="spec-label">{{item.label}}</text>
-          <text class="spec-value">{{item.value}}</text>
+      <view class="notice-section">
+        <view class="notice-title">⚠️ 注意事项</view>
+        <view class="notice-item">
+          <text class="notice-dot">•</text>
+          <text class="notice-text">请妥善保管设备，避免损坏或丢失</text>
+        </view>
+        <view class="notice-item">
+          <text class="notice-dot">•</text>
+          <text class="notice-text">设备如有损坏，将从押金中扣除维修费用</text>
+        </view>
+        <view class="notice-item">
+          <text class="notice-dot">•</text>
+          <text class="notice-text">拿到和归还当天均不计入租期</text>
+        </view>
+        <view class="notice-item">
+          <text class="notice-dot">•</text>
+          <text class="notice-text">快递运输期间不收取租金</text>
+        </view>
+        <view class="notice-item">
+          <text class="notice-dot">•</text>
+          <text class="notice-text">设备归还后3-5个工作日退还押金</text>
         </view>
       </view>
 
-      <!-- 商品宣传图（只在有宣传图时显示） -->
-      <view class="promo-image-section" wx:if="{{product.promoImage}}">
-        <image class="promo-image" 
-               src="{{product.promoImage}}" 
-               mode="widthFix"></image>
+      <view class="notice-section">
+        <view class="notice-title">📞 联系我们</view>
+        <view class="notice-item">
+          <text class="notice-dot">•</text>
+          <text class="notice-text">如有任何问题，请联系在线客服</text>
+        </view>
+        <view class="notice-item">
+          <text class="notice-dot">•</text>
+          <text class="notice-text">客服工作时间：9:00-21:00</text>
+        </view>
       </view>
     </view>
 
@@ -152,6 +179,10 @@
 <!-- 底部操作栏（固定） -->
 <view class="bottom-bar" style="padding-bottom: calc(env(safe-area-inset-bottom) / 2 + 2px);">
   <view class="bar-left">
+    <view class="service-btn" bindtap="onContactService">
+      <image class="service-icon-img" src="/static/icons/customer-service.png" mode="aspectFit"/>
+      <text class="service-text">客服</text>
+    </view>
     <view class="service-btn" bindtap="onToggleCollect">
       <image class="service-icon-img" src="{{collected ? '/static/icons/favorite-on.png' : '/static/icons/favorite-off.png'}}" mode="aspectFit"/>
       <text class="service-text">收藏</text>
@@ -171,13 +202,13 @@
   </view>
   
   <view class="sheet-content">
-    <!-- 取货地点 -->
+    <!-- 取货地点（微信原生两级选择） -->
     <view class="sheet-item-compact">
-      <picker mode="selector" range="{{pickupLocations}}" value="{{selectedPickupIndex}}" bindchange="onPickupLocationChange">
+      <picker mode="multiSelector" range="{{pickupColumns}}" value="{{pickupValue}}" bindchange="onPickupChange" bindcolumnchange="onPickupColumnChange">
         <view class="compact-row">
           <text class="compact-label">取货地点</text>
           <view class="compact-value">
-            <text class="compact-text">{{pickupLocations[selectedPickupIndex]}}</text>
+            <text class="compact-text">{{selectedPickupLocation || '请选择取货地点'}}</text>
             <text class="compact-arrow">›</text>
           </view>
         </view>
@@ -196,6 +227,30 @@
           <text wx:else class="compact-placeholder">请选择器材租期</text>
           <text class="compact-arrow">›</text>
         </view>
+      </view>
+    </view>
+    
+    <!-- 取货时间（日期+小时+分钟） -->
+    <view class="sheet-item-compact">
+      <picker mode="multiSelector" 
+              range="{{pickupTimeColumns}}" 
+              value="{{pickupTimeValue}}" 
+              bindchange="onPickupTimeChange">
+        <view class="compact-row">
+          <text class="compact-label">取货时间</text>
+          <view class="compact-value">
+            <text class="compact-text">{{pickupTimeDisplay || '请选择取货时间'}}</text>
+            <text class="compact-arrow">›</text>
+          </view>
+        </view>
+      </picker>
+    </view>
+    
+    <!-- 附赠配件 -->
+    <view class="sheet-item free-accessories-section" wx:if="{{product.freeAccessories && product.freeAccessories.length > 0}}">
+      <view class="item-label">附赠配件</view>
+      <view class="free-accessories-text">
+        <text class="free-accessories-content">{{product.freeAccessories}}</text>
       </view>
     </view>
     
@@ -256,7 +311,7 @@
     
     <!-- 日历日期网格 -->
     <view class="calendar-grid">
-      <view class="date-item"
+      <view class="date-item {{item.isStart ? 'start-bg' : ''}} {{item.isEnd ? 'end-bg' : ''}} {{item.isInRange ? 'in-range-bg' : ''}}"
             wx:for="{{calendarDates}}"
             wx:key="index"
             data-date="{{item.date}}"
@@ -303,3 +358,41 @@
   </view>
 </view>
 
+<!-- 计价规则说明弹窗 -->
+<view class="price-detail-mask" wx:if="{{showPriceDetail}}" bindtap="hidePriceDetail">
+  <view class="price-detail-content" catchtap="stopPropagation">
+    <!-- 标题 -->
+    <view class="detail-header">
+      <text class="detail-title">计价规则</text>
+      <view class="detail-close" bindtap="hidePriceDetail">✕</view>
+    </view>
+    
+    <!-- 时间轴示例 -->
+    <view class="timeline-demo">
+      <view class="timeline-row">
+        <view class="timeline-date {{index >= 2 && index <= 7 ? 'in-period' : ''}} {{index === 2 ? 'start-date' : ''}} {{index === 7 ? 'end-date' : ''}}"
+              wx:for="{{[6,7,8,9,10,11,12,13,14,15]}}"
+              wx:key="index">
+          <text class="date-num">{{item}}</text>
+        </view>
+      </view>
+      
+      <!-- 标签行 -->
+      <view class="timeline-labels">
+        <view class="label-item transit">快递中</view>
+        <view class="label-item receive">拿到</view>
+        <view class="label-item rental">实际租金天数</view>
+        <view class="label-item return">归还</view>
+        <view class="label-item transit">快递中</view>
+      </view>
+    </view>
+    
+    <!-- 说明文字 -->
+    <view class="detail-description">
+      <view class="desc-item">
+        <text class="desc-dot">•</text>
+        <text class="desc-text">拿到和归还当天均不计入租期</text>
+      </view>
+    </view>
+  </view>
+</view>

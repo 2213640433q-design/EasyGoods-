@@ -1,0 +1,10 @@
+{
+  "name": "recallHostedDevice",
+  "version": "1.0.0",
+  "description": "召回托管设备",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}
+

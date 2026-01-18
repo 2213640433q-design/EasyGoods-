@@ -41,39 +41,34 @@
   letter-spacing: 0.5px;
 }
 
-/* 一键扫码按钮 */
-.scan-bar {
-  background: #FFFFFF;
-  padding: 12px 16px;
-  border-bottom: 1px solid #E5E5EA;
-}
-
-.scan-btn {
-  width: 100%;
-  height: 48px;
-  background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
-  border-radius: 24px;
+/* 底部中间悬浮扫码按钮 */
+.floating-scan-btn {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);  /* 水平居中 */
+  bottom: 20px;  /* 距离底部20px */
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;  /* 圆形 */
+  background: #FFFFFF;  /* 白色背景 */
+  border: 2px solid #667EEA;  /* 蓝紫色边框 */
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  color: #FFFFFF;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-  border: none;
+  z-index: 1000;
+  transition: all 0.3s ease;
 }
 
-.scan-btn:active {
-  opacity: 0.8;
-  transform: scale(0.98);
+.floating-scan-btn:active {
+  transform: translateX(-50%) scale(0.92);  /* 保持居中同时缩小 */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.scan-btn-icon {
-  font-size: 20px;
-}
-
-.scan-btn-text {
-  font-size: 16px;
-  font-weight: 600;
+.scan-icon-img {
+  width: 32px;
+  height: 32px;
+  display: block;
 }
 
 /* 筛选滚动容器 */
@@ -82,15 +77,22 @@
   border-bottom: 1px solid #E5E5EA;
   white-space: nowrap;
   width: 100%;
+  height: 48px;
+  flex-shrink: 0;
+  overflow: hidden;
+  position: relative;
+  z-index: 10;
 }
 
 /* 筛选栏内容 */
 .filter-bar {
-  padding: 12px 16px; /* 统一上下左右padding */
-  display: inline-flex; /* 使用 inline-flex 支持横向滚动 */
+  padding: 12px 16px;
+  display: inline-flex;
   flex-direction: row;
   white-space: nowrap;
   box-sizing: border-box;
+  height: 100%;
+  align-items: center;
 }
 
 .filter-item {

@@ -5,17 +5,22 @@ App({
     
     // ========== 初始化云开发（必须最先执行）==========
     if (wx.cloud) {
-      wx.cloud.init({
-        env: 'cloud1-8gi23b6b06a44a37',  // 云开发环境ID
-        traceUser: true  // 记录用户访问记录，便于分析
-      })
-      console.log('✅ 云开发环境初始化成功')
+      try {
+        wx.cloud.init({
+          env: 'cloud1-8gi23b6b06a44a37',  // 云开发环境ID
+          traceUser: true  // 记录用户访问记录，便于分析
+        })
+        console.log('✅ 云开发环境初始化成功')
+      } catch (error) {
+        console.error('❌ 云开发初始化失败:', error)
+        // 可以在这里添加降级处理逻辑
+      }
     } else {
       console.error('请使用 2.2.3 或以上的基础库以使用云能力')
     }
     
     // 🎫 检查是否通过小程序码扫码进入（scene 参数）
-    const scene = options.scene || ''
+    const scene = options.scene ? String(options.scene) : ''
     console.log('🔍 Scene 参数:', scene)
     
     if (scene && scene.startsWith('ORDER')) {
@@ -29,7 +34,10 @@ App({
         })
       }, 800)
     } else {
-      // 正常启动，发放新用户优惠券
+      // 正常启动，检查登录状态
+      // 📱 检查用户是否已登录
+      this.checkLoginStatus()
+      
       // 🎁 自动为新用户发放欢迎优惠券
       this.initNewUser()
     }
@@ -50,7 +58,7 @@ App({
   
   onShow(options) {
     // 🎫 检查是否从后台进入且携带 scene 参数
-    const scene = options.scene || ''
+    const scene = options.scene ? String(options.scene) : ''
     console.log('📱 小程序显示，Scene:', scene)
     
     if (scene && scene.startsWith('ORDER')) {
@@ -106,6 +114,43 @@ App({
       // 不影响正常使用，静默失败
     }
   },
+  
+  // 📱 检查用户登录状态
+  checkLoginStatus() {
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+    console.log('📱 检查用户登录状态...')
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+    
+    try {
+      // 从本地存储获取用户信息
+      const userInfo = wx.getStorageSync('userInfo')
+      const isLoggedIn = wx.getStorageSync('isLoggedIn')
+      
+      console.log('📋 本地存储信息:')
+      console.log('  userInfo:', userInfo)
+      console.log('  isLoggedIn:', isLoggedIn)
+      
+      // 判断是否已登录（有手机号或头像即视为已登录）
+      const hasLogin = userInfo && (userInfo.phone || userInfo.avatar)
+      
+      if (!hasLogin) {
+        console.log('⚠️ 用户未登录，跳转到登录页面')
+        
+        // 延迟跳转，确保页面初始化完成
+        setTimeout(() => {
+          wx.reLaunch({
+            url: '/pages/login/index'
+          })
+        }, 500)
+      } else {
+        console.log('✅ 用户已登录，继续正常流程')
+      }
+    } catch (err) {
+      console.error('❌ 检查登录状态失败:', err)
+      // 失败时不跳转，避免影响用户使用
+    }
+  },
+  
   globalData: {
     userInfo: null,
     cloudEnv: 'cloud1-8gi23b6b06a44a37'  // 全局存储环境ID，方便其他页面使用

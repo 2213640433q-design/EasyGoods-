@@ -30,7 +30,7 @@ Page({
     // 子分类配置（根据主导航动态切换）- 每个都包含"全部"
     subTabsConfig: {
       'entertainment': ['全部', '麻将', '德州扑克', '骰子', '蓝牙音箱', '投影仪', '其他'],
-      'photography': ['全部', '运动相机', 'CCD', '投影仪', '配件'],
+      'photography': ['全部', '运动相机', 'CCD', '单反', '投影仪', '配件'],
       'outdoor': ['全部', '野餐垫', '帐篷', '折叠椅', '其他']
     },
     
@@ -400,6 +400,7 @@ Page({
     if (e.touches && e.touches.length > 0) {
       this.pageTouchStartX = e.touches[0].pageX
       this.pageTouchStartY = e.touches[0].pageY
+      this.swipeDirection = null  // 重置滑动方向
       this.setData({
         isPageSwiping: false,
         pageSwipeTransition: ''
@@ -416,30 +417,41 @@ Page({
     const deltaX = touchX - this.pageTouchStartX
     const deltaY = touchY - this.pageTouchStartY
     
-    // 判断是否开始水平滑动
-    if (!this.data.isPageSwiping && Math.abs(deltaX) > 10) {
+    // 🎯 方向锁定机制：首次判断滑动方向后锁定
+    if (!this.swipeDirection && (Math.abs(deltaX) > 5 || Math.abs(deltaY) > 5)) {
+      // 判断是水平还是垂直滑动
       if (Math.abs(deltaX) > Math.abs(deltaY) * 1.5) {
-        this.setData({ isPageSwiping: true })
+        this.swipeDirection = 'horizontal'  // 水平滑动
+      } else if (Math.abs(deltaY) > Math.abs(deltaX) * 1.5) {
+        this.swipeDirection = 'vertical'    // 垂直滑动
       }
     }
     
-    // iOS风格跟手效果
-    if (this.data.isPageSwiping) {
-      // 只允许向左滑动（切换到我的页面）
-      const damping = deltaX < 0 ? 0.5 : 0.2  // 向左阻尼小，向右阻尼大
-      const offset = deltaX * damping
+    // 🎯 只有明确的水平滑动才触发页面切换
+    if (this.swipeDirection === 'horizontal') {
+      if (!this.data.isPageSwiping && Math.abs(deltaX) > 10) {
+        this.setData({ isPageSwiping: true })
+      }
       
-      // 透明度变化
-      const maxOffset = 150
-      const opacityChange = Math.min(Math.abs(offset) / maxOffset, 0.2)
-      const opacity = 1 - opacityChange
-      
-      this.setData({
-        pageSwipeOffset: offset,
-        pageSwipeOpacity: opacity,
-        pageSwipeTransition: ''
-      })
+      // iOS风格跟手效果
+      if (this.data.isPageSwiping) {
+        // 只允许向左滑动（切换到我的页面）
+        const damping = deltaX < 0 ? 0.5 : 0.2  // 向左阻尼小，向右阻尼大
+        const offset = deltaX * damping
+        
+        // 透明度变化
+        const maxOffset = 150
+        const opacityChange = Math.min(Math.abs(offset) / maxOffset, 0.2)
+        const opacity = 1 - opacityChange
+        
+        this.setData({
+          pageSwipeOffset: offset,
+          pageSwipeOpacity: opacity,
+          pageSwipeTransition: ''
+        })
+      }
     }
+    // 🎯 如果是垂直滑动，不做任何处理，让scroll-view接管
   },
 
   // 页面滑动切换 - 触摸结束（iOS风格动画）

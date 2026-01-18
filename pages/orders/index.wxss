@@ -265,17 +265,17 @@ page {
   background:#EEF3F8; 
   color:#1D1D1F; 
   border: none; 
-  font-size: 12px;
-  font-weight: normal;
-  padding: 6px 16px;
+  font-size: 14px;          /* 统一字体大小 */
+  font-weight: 600;         /* 统一加粗 */
+  padding: 8px 20px;        /* 统一内边距 */
   flex-shrink: 0;
-  line-height: 1.4;
-  border-radius: 16px;
+  line-height: 1.2;         /* 统一行高 */
+  border-radius: 18px;      /* 统一圆角 */
   margin-left: 12px;
 }
 
 .btn-primary {
-  background: #4A6FA5;
+  background: #4A6FA5;      /* 主色按钮背景 */
   color: #FFF;
-  font-weight: 500;
+  /* 其他样式继承 .btn */
 }

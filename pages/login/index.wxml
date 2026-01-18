@@ -1,0 +1,56 @@
+<!-- 登录授权页面 -->
+<view class="login-page">
+  <!-- 背景装饰 -->
+  <view class="bg-decoration">
+    <view class="circle circle-1"></view>
+    <view class="circle circle-2"></view>
+    <view class="circle circle-3"></view>
+  </view>
+  
+  <!-- 内容区域 -->
+  <view class="content">
+    <!-- Logo -->
+    <image class="logo" src="/static/icons/easygoods-logo.svg" mode="aspectFit"></image>
+    
+    <!-- 标题 -->
+    <view class="title">欢迎使用 EasyGoods</view>
+    <view class="subtitle">一键登录，开启租赁之旅</view>
+    
+    <!-- 特点展示 -->
+    <view class="features">
+      <view class="feature-item">
+        <text class="feature-icon">📱</text>
+        <text class="feature-text">快速下单</text>
+      </view>
+      <view class="feature-item">
+        <text class="feature-icon">🛡️</text>
+        <text class="feature-text">安全保障</text>
+      </view>
+      <view class="feature-item">
+        <text class="feature-icon">🎁</text>
+        <text class="feature-text">专属优惠</text>
+      </view>
+    </view>
+    
+    <!-- 手机号授权按钮 -->
+    <button 
+      class="auth-btn"
+      open-type="getPhoneNumber"
+      bindgetphonenumber="onGetPhoneNumber"
+      phone-number-no-quota-toast="{{false}}">
+      <view class="btn-content">
+        <text class="btn-icon">📱</text>
+        <text class="btn-text">授权登录</text>
+      </view>
+      <view class="btn-desc">点击授权手机号即可登录</view>
+    </button>
+    
+    <!-- 协议提示 -->
+    <view class="agreement">
+      <text class="agreement-text">登录即代表同意</text>
+      <text class="agreement-link" bindtap="goAgreement">《用户协议》</text>
+      <text class="agreement-text">和</text>
+      <text class="agreement-link" bindtap="goPrivacy">《隐私政策》</text>
+    </view>
+  </view>
+</view>

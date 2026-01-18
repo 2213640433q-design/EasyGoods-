@@ -8,6 +8,8 @@ Page({
     // 管理模式
     isManage: false,
     selectedIds: {},
+    dateGroupChecked: {},     /* 日期组选择状态 */
+    selectedCount: 0,         /* 已选择的商品数量 */
     allChecked: false,
     
     // 浏览记录（按日期分组）
@@ -56,7 +58,8 @@ Page({
           id: record._id,
           productId: record.productId,
           type: 'rent',
-          title: record.productName,
+          name: record.productName,      /* 商品名称 */
+          title: record.productName,     /* 保持兼容 */
           image: record.productImage || '/static/placeholder/p1.png',
           price: record.price,
           currency: '£',
@@ -151,6 +154,8 @@ Page({
     this.setData({
       isManage: !this.data.isManage,
       selectedIds: {},
+      dateGroupChecked: {},
+      selectedCount: 0,
       allChecked: false
     })
   },
@@ -180,7 +185,60 @@ Page({
     console.log('✅ 已选:', selectedCount, '/', allRecordsCount)
     console.log('📦 selectedIds:', map)
     
-    this.setData({ selectedIds: map, allChecked })
+    // 更新日期组选择状态
+    const dateGroupChecked = this.updateDateGroupChecked(map)
+    
+    this.setData({ 
+      selectedIds: map, 
+      selectedCount: selectedCount,
+      dateGroupChecked: dateGroupChecked,
+      allChecked: allChecked
+    })
+  },
+
+  // 更新日期组选择状态
+  updateDateGroupChecked(selectedIds) {
+    const dateGroupChecked = {}
+    this.data.groupedRecords.forEach(group => {
+      const allSelected = group.records.every(record => selectedIds[record.id])
+      dateGroupChecked[group.date] = allSelected && group.records.length > 0
+    })
+    return dateGroupChecked
+  },
+
+  // 日期组选择框点击
+  onDateGroupCheckboxTap(e) {
+    const date = e.currentTarget.dataset.date
+    const group = this.data.groupedRecords.find(g => g.date === date)
+    if (!group) return
+    
+    const map = Object.assign({}, this.data.selectedIds)
+    const isCurrentlyChecked = this.data.dateGroupChecked[date]
+    
+    // 切换该日期组下所有商品的选择状态
+    group.records.forEach(record => {
+      map[record.id] = !isCurrentlyChecked
+    })
+    
+    // 计算总选择数量
+    const selectedCount = Object.keys(map).filter(key => map[key]).length
+    
+    // 计算是否全选
+    let allRecordsCount = 0
+    this.data.groupedRecords.forEach(g => {
+      allRecordsCount += g.records.length
+    })
+    const allChecked = selectedCount === allRecordsCount && allRecordsCount > 0
+    
+    // 更新日期组选择状态
+    const dateGroupChecked = this.updateDateGroupChecked(map)
+    
+    this.setData({ 
+      selectedIds: map,
+      selectedCount: selectedCount,
+      dateGroupChecked: dateGroupChecked,
+      allChecked: allChecked
+    })
   },
 
   // 全选/取消全选
@@ -196,7 +254,18 @@ Page({
       })
     }
     
-    this.setData({ allChecked: next, selectedIds: map })
+    // 计算选择数量
+    const selectedCount = next ? Object.keys(map).length : 0
+    
+    // 更新日期组选择状态
+    const dateGroupChecked = this.updateDateGroupChecked(map)
+    
+    this.setData({ 
+      allChecked: next, 
+      selectedIds: map,
+      selectedCount: selectedCount,
+      dateGroupChecked: dateGroupChecked
+    })
   },
 
   // 🌟 批量删除（从云端删除）
@@ -238,6 +307,8 @@ Page({
             this.setData({
               isManage: false,
               selectedIds: {},
+              dateGroupChecked: {},
+              selectedCount: 0,
               allChecked: false
             })
             

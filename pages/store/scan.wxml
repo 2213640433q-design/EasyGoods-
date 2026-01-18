@@ -18,7 +18,6 @@
       
       <!-- 扫码按钮 -->
       <button class="scan-btn" bindtap="onScanQRCode">
-        <text class="btn-icon">📷</text>
         <text class="btn-text">扫描二维码</text>
       </button>
       
@@ -85,9 +84,9 @@
 
       <!-- 确认按钮（根据二维码类型显示不同文案） -->
       <button class="confirm-btn" bindtap="onConfirmAction">
-        <text wx:if="{{qrType === 'pickup'}}">✅ 确认已取件</text>
-        <text wx:elif="{{qrType === 'return'}}">✅ 确认已归还</text>
-        <text wx:else>✅ 确认操作</text>
+        <text wx:if="{{qrType === 'pickup'}}">确认已取件</text>
+        <text wx:elif="{{qrType === 'return'}}">确认已归还</text>
+        <text wx:else>确认操作</text>
       </button>
     </view>
   </scroll-view>

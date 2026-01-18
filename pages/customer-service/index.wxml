@@ -1,0 +1,143 @@
+<!-- 客服咨询页面 -->
+<view class="container">
+  <!-- 顶部导航栏 - 固定在顶部 -->
+  <view class="navbar" style="padding-top: {{statusBarHeight}}px; height: {{totalNavHeight}}px; position: fixed; top: 0; z-index: 99999;">
+    <view class="nav-content">
+      <view class="nav-back" bindtap="onBack">
+        <text class="back-icon">‹</text>
+      </view>
+      <view class="nav-title">在线客服</view>
+      <view class="nav-placeholder"></view>
+    </view>
+  </view>
+
+  <!-- 聊天消息区域 -->
+  <scroll-view class="messages-area {{showProductBar ? 'with-product-bar' : 'without-product-bar'}}" 
+               style="padding-top: 10px;"
+               scroll-y 
+               scroll-into-view="{{scrollToId}}" 
+               scroll-with-animation>
+    <!-- 欢迎消息 -->
+    <view class="message-item service welcome-message">
+      <image class="avatar" src="/static/icons/customer-service.png" mode="aspectFill"></image>
+      <view class="message-content">
+        <view class="message-bubble">
+          <text class="message-text">您好！我是在线客服，有什么可以帮您的吗？</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 消息列表 -->
+    <!-- 客服消息 -->
+    <block wx:for="{{messages}}" wx:key="id">
+      <view class="message-item service" wx:if="{{item.type === 'service'}}" id="msg-{{item.id}}">
+        <image class="avatar" src="/static/icons/customer-service.png" mode="aspectFill"></image>
+        <view class="message-content">
+          <!-- 文字消息 -->
+          <view class="message-bubble" wx:if="{{item.msgType === 'text'}}">
+            <text class="message-text">{{item.content}}</text>
+          </view>
+          <!-- 图片消息 -->
+          <image class="message-image" wx:if="{{item.msgType === 'image'}}" src="{{item.content}}" mode="aspectFill" bindtap="previewImage" data-url="{{item.content}}"></image>
+        </view>
+      </view>
+      
+      <!-- 用户消息（注意：由于使用row-reverse，avatar要写在后面才能显示在右边） -->
+      <view class="message-item user" wx:if="{{item.type === 'user'}}" id="msg-{{item.id}}">
+        <view class="message-content">
+          <!-- 文字消息 -->
+          <view class="message-bubble" wx:if="{{item.msgType === 'text'}}">
+            <text class="message-text">{{item.content}}</text>
+          </view>
+          <!-- 图片消息 -->
+          <image class="message-image" wx:if="{{item.msgType === 'image'}}" src="{{item.content}}" mode="aspectFill" bindtap="previewImage" data-url="{{item.content}}"></image>
+          <!-- 商品消息 -->
+          <view class="product-card" wx:if="{{item.msgType === 'product'}}" bindtap="goToProductDetail">
+            <image class="product-image" src="{{item.content.images[0]}}" mode="aspectFill"></image>
+            <view class="product-info">
+              <text class="product-name">{{item.content.name}}</text>
+              <text class="product-price">£{{item.content.price}}/天</text>
+            </view>
+          </view>
+        </view>
+        <!-- 🌟 显示用户真实头像，如果没有则显示默认头像 -->
+        <image wx:if="{{userInfo.avatar}}" class="avatar" src="{{userInfo.avatar}}" mode="aspectFill"></image>
+        <view wx:else class="avatar avatar-default">
+          <text class="avatar-icon">👤</text>
+        </view>
+      </view>
+    </block>
+
+    <!-- 🌟 AI正在输入提示 - 显示在所有消息的最后 -->
+    <view class="message-item service typing-indicator" wx:if="{{isAiTyping}}" id="typing-indicator">
+      <image class="avatar" src="/static/icons/customer-service.png" mode="aspectFill"></image>
+      <view class="message-content">
+        <view class="message-bubble typing">
+          <view class="typing-dots">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+          </view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 底部商品卡片快捷栏 -->
+  <view class="bottom-product-bar" wx:if="{{selectedProduct && showProductBar}}" style="bottom: {{keyboardHeight + 70}}px;">
+    <view class="quick-product-card">
+      <image class="quick-product-image" src="{{selectedProduct.images[0]}}" mode="aspectFill"></image>
+      <view class="quick-product-info">
+        <text class="quick-product-name">{{selectedProduct.name}}</text>
+        <text class="quick-product-price">£{{selectedProduct.price}}/天</text>
+      </view>
+      <view class="quick-send-btn" bindtap="sendProductCard">
+        <text>发送商品</text>
+      </view>
+      <view class="quick-close-btn" bindtap="hideProductBar">
+        <text>✕</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部输入区域 -->
+  <view class="input-area" style="bottom: {{keyboardHeight}}px; padding-bottom: {{keyboardHeight > 0 ? '5px' : 'calc(env(safe-area-inset-bottom) + 10px)'}};">
+    <input class="message-input" 
+           type="text" 
+           placeholder="请输入您的问题..." 
+           value="{{inputText}}"
+           bindinput="onInput"
+           confirm-type="send"
+           bindconfirm="sendMessage"
+           adjust-position="{{false}}"
+           cursor-spacing="2"/>
+    <view class="send-btn {{inputText ? 'active' : ''}}" bindtap="sendMessage">
+      <text>发送</text>
+    </view>
+  </view>
+</view>
+
+<!-- 商品选择弹窗 -->
+<view class="product-selector-mask" wx:if="{{showProductSelector}}" bindtap="closeProductSelector">
+  <view class="product-selector" catchtap="stopPropagation">
+    <view class="selector-header">
+      <text class="selector-title">选择商品</text>
+      <view class="selector-close" bindtap="closeProductSelector">✕</view>
+    </view>
+    <scroll-view class="selector-content" scroll-y>
+      <view class="product-item" 
+            wx:for="{{productList}}" 
+            wx:key="_id"
+            bindtap="selectProduct"
+            data-product="{{item}}">
+        <image class="item-image" src="{{item.images[0]}}" mode="aspectFill"></image>
+        <view class="item-info">
+          <text class="item-name">{{item.name}}</text>
+          <text class="item-price">£{{item.price}}/天</text>
+        </view>
+        <text class="check-icon" wx:if="{{selectedProduct && selectedProduct._id === item._id}}">✓</text>
+      </view>
+    </scroll-view>
+  </view>
+</view>
+

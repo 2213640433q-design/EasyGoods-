@@ -3,6 +3,9 @@
       bindtouchmove="onPageTouchMove"
       bindtouchend="onPageTouchEnd">
 <view class="page" style="transform: translateX({{pageSwipeOffset}}px); opacity: {{pageSwipeOpacity}}; transition: {{pageSwipeTransition}};">
+  
+  <scroll-view scroll-y class="scroll-content" enable-back-to-top>
+  <!-- 顶部用户信息栏（在滚动区域内） -->
   <view class="topbar" style="padding-top: {{statusBarHeight}}px;">
     <!-- 胶囊占位行：空的，只用来撑开高度 -->
     <view class="topbar-nav-placeholder" style="height: {{navBarHeight}}px;"></view>
@@ -10,25 +13,21 @@
     <!-- 内容行：头像、用户信息、编辑按钮（在胶囊下方） -->
     <view class="topbar-user-content">
       <!-- 头像 -->
-      <view class="avatar-wrapper" bindtap="{{userInfo.avatar ? 'onAvatarTap' : 'onLogin'}}">
-        <image wx:if="{{userInfo.avatar}}" class="topbar-avatar" src="{{userInfo.avatar}}" mode="aspectFill"/>
-        <view wx:else class="topbar-avatar-default">
-          <text class="avatar-icon">👤</text>
-        </view>
+      <view class="avatar-wrapper" bindtap="{{userInfo.phone ? 'onAvatarTap' : 'onLogin'}}">
+        <image class="topbar-avatar" src="{{userInfo.avatar || '/static/icons/logo.png'}}" mode="aspectFill"/>
       </view>
       <!-- 用户信息 -->
-      <view class="topbar-user-info" bindtap="{{userInfo.avatar ? '' : 'onLogin'}}">
-        <text class="topbar-nickname {{userInfo.avatar ? '' : 'login-hint'}}">
-          {{userInfo.nickname || openid || '点击登录'}}
+      <view class="topbar-user-info" bindtap="{{userInfo.phone ? '' : 'onLogin'}}">
+        <text class="topbar-nickname {{userInfo.phone ? '' : 'login-hint'}}">
+          {{displayNickname || '点击登录'}}
         </text>
         <text class="topbar-school" wx:if="{{userInfo.school}}">{{userInfo.school}}</text>
       </view>
       <!-- 编辑按钮（靠右） - 仅登录后显示 -->
-      <text wx:if="{{userInfo.avatar}}" class="topbar-edit-text" bindtap="goEditProfile">编辑</text>
+      <text wx:if="{{userInfo.phone}}" class="topbar-edit-text" bindtap="goEditProfile">编辑信息</text>
     </view>
   </view>
   
-  <scroll-view scroll-y class="scroll-content" enable-back-to-top>
   <view class="section">
     <view class="section-title">常用</view>
     <view class="grid">
@@ -54,8 +53,10 @@
   <!-- 租赁信息 -->
   <view class="section">
     <view class="section-header">
-      <text class="section-title">租赁信息</text>
-      <view class="section-more" bindtap="goAllOrders"><text>全部订单</text><text class="arrow">›</text></view>
+      <view class="section-title">租赁信息</view>
+      <view class="section-more" bindtap="goAllOrders">
+        <text class="arrow">›</text>
+      </view>
     </view>
     <view class="rental-nav">
       <view class="rental-nav-item" bindtap="goOrderStatus" data-status="">
@@ -79,13 +80,13 @@
 
   <!-- 我的租赁 -->
   <view class="section">
-    <view class="section-title">我的租赁</view>
+    <view class="section-title">常用功能</view>
     <view class="trade-grid">
-      <view class="trade-item" bindtap="onTrade" data-key="address">
-        <view class="trade-icon-bg address">
-          <image class="trade-icon-img" src="/static/icons/rental/address.png" mode="aspectFit"/>
+      <view class="trade-item" bindtap="onTrade" data-key="hosting">
+        <view class="trade-icon-bg hosting">
+          <image class="trade-icon-img" src="/static/icons/rental/hosting.png" mode="aspectFit"/>
         </view>
-        <text class="trade-text">收货地址</text>
+        <text class="trade-text">闲置托管</text>
       </view>
       <view class="trade-item" bindtap="onTrade" data-key="verify">
         <view class="trade-icon-bg verify">
@@ -113,15 +114,15 @@
     <view class="section-title">更多服务</view>
     <view class="service-list">
       <view class="service-item" bindtap="goStoreScan">
-        <text class="service-label">📦 门店取件</text>
+        <text class="service-label">HOST-门店取件</text>
+        <text class="service-arrow">›</text>
+      </view>
+      <view class="service-item" bindtap="goProductImageManage">
+        <text class="service-label">HOST-商品图片管理</text>
         <text class="service-arrow">›</text>
       </view>
       <view class="service-item" bindtap="onService" data-key="city">
         <text class="service-label">入驻城市</text>
-        <text class="service-arrow">›</text>
-      </view>
-      <view class="service-item" bindtap="onService" data-key="customer">
-        <text class="service-label">客服中心</text>
         <text class="service-arrow">›</text>
       </view>
       <view class="service-item" bindtap="onService" data-key="about">
@@ -135,13 +136,20 @@
     </view>
   </view>
   
+  <!-- 退出登录按钮 -->
+  <view class="section" wx:if="{{userInfo.phone || userInfo.avatar}}">
+    <view class="logout-container">
+      <button class="logout-btn" bindtap="onLogout">退出登录</button>
+    </view>
+  </view>
+  
   <!-- 底部占位，防止被导航栏遮挡 -->
   <view class="bottom-placeholder"></view>
   </scroll-view>
 
   <view class="bottom-nav">
-    <view class="nav-item" bindtap="onNavTap" data-page="index"><image class="nav-icon-img" src="/static/tabbar/png/home-outline.png" mode="widthFix"/><text class="nav-text">首页</text></view>
-    <view class="nav-item active" bindtap="onNavTap" data-page="profile"><image class="nav-icon-img" src="/static/tabbar/png/profile-filled.png" mode="widthFix"/><text class="nav-text">我的</text></view>
+    <view class="nav-item" bindtap="onNavTap" data-page="index"><image class="nav-icon-img" src="/static/tabbar/png/home-outline.png" mode="aspectFit"/><text class="nav-text">首页</text></view>
+    <view class="nav-item active" bindtap="onNavTap" data-page="profile"><image class="nav-icon-img" src="/static/tabbar/png/profile-filled.png" mode="aspectFit"/><text class="nav-text">我的</text></view>
   </view>
 
   <!-- 自定义组件：仿原生弹窗 -->

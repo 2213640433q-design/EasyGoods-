@@ -1,0 +1,40 @@
+# ============================================
+# 快速推送命令（可直接复制执行）
+# ============================================
+
+# 1. 进入项目目录
+cd "/Users/Zhuanz/WeChatProjects/EasyGoods-租赁"
+
+# 2. 检查Git配置（如未配置）
+git config --global user.name "你的GitHub用户名"
+git config --global user.email "你的GitHub邮箱"
+
+# 3. 配置远程仓库
+git remote remove origin 2>/dev/null || true
+git remote add origin https://github.com/2213640433q-design/EasyGoods-.git
+
+# 4. 添加所有文件
+git add .
+
+# 5. 提交更改
+git commit -m "feat: 初始化EasyGoods微信小程序项目"
+
+# 6. 推送到GitHub
+git push -u origin master
+
+# ============================================
+# 如果推送失败，尝试以下命令：
+# ============================================
+
+# 如果GitHub默认分支是main：
+git push -u origin master:main
+
+# 如果需要强制推送（谨慎使用）：
+git push -u origin master --force
+
+# ============================================
+# 或者直接运行自动化脚本：
+# ============================================
+
+./push-to-github.sh
+

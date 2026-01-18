@@ -7,7 +7,8 @@
       </view>
       <text class="title">浏览记录</text>
       <view class="nav-right">
-        <!-- 管理按钮移到下方日期标签处 -->
+        <!-- ✅ 管理按钮在右上角 -->
+        <text class="manage-btn" bindtap="toggleManage">{{isManage ? '完成' : '管理'}}</text>
       </view>
     </view>
   </view>
@@ -26,9 +27,11 @@
       <!-- 按日期分组 -->
       <view class="date-group" wx:for="{{groupedRecords}}" wx:key="date" wx:for-index="groupIndex">
         <view class="date-header">
+          <!-- 管理模式：日期左侧大圆形选择框 -->
+          <view class="date-checkbox-wrapper" wx:if="{{isManage}}" catchtap="onDateGroupCheckboxTap" data-date="{{item.date}}">
+            <checkbox class="date-checkbox" checked="{{dateGroupChecked[item.date]}}" />
+          </view>
           <text class="date-label">{{item.dateLabel}}</text>
-          <!-- 管理按钮（只在第一个日期组显示） -->
-          <text wx:if="{{groupIndex === 0}}" class="manage-btn" bindtap="toggleManage">{{isManage ? '完成' : '管理'}}</text>
         </view>
         
         <!-- 商品网格 -->
@@ -39,16 +42,17 @@
               <checkbox class="checkbox" checked="{{selectedIds[record.id]}}" />
             </view>
             
-            <!-- 商品图片 -->
-            <view class="product-image-wrapper" bindtap="onProductTap" data-id="{{record.productId}}">
-              <image class="product-image" src="{{record.image}}" mode="aspectFill"/>
+            <!-- 商品图片（在白色卡片内） -->
+            <view class="card-content" bindtap="onProductTap" data-id="{{record.productId}}">
+              <view class="product-image-wrapper">
+                <image class="product-image" src="{{record.image}}" mode="aspectFill"/>
+              </view>
             </view>
             
-            <!-- 商品价格 -->
+            <!-- 价格在卡片外部，显示在灰色背景上 -->
             <view class="product-price" bindtap="onProductTap" data-id="{{record.productId}}">
-              <text class="currency">{{record.currency}}</text>
-              <text class="price">{{record.price}}</text>
-              <text class="unit" wx:if="{{record.unit}}">/{{record.unit}}</text>
+              <text class="price-symbol">{{record.currency}}</text>
+              <text class="price-number">{{record.price}}</text>
             </view>
           </view>
         </view>
@@ -64,10 +68,15 @@
   </scroll-view>
 
   <!-- 管理模式底部栏 -->
-  <view class="manage-bar" wx:if="{{isManage}}" style="padding-bottom: calc(env(safe-area-inset-bottom) + 8px);">
-    <checkbox class="chk-all" checked="{{allChecked}}" bindchange="onToggleAll"/> 
-    <text class="all-text">全选</text>
-    <view class="delete-btn" bindtap="onBatchDelete">删除</view>
+  <view class="manage-bar" wx:if="{{isManage}}" style="padding-bottom: calc(env(safe-area-inset-bottom) + 10px);">
+    <view class="left-section">
+      <text class="selected-count">已选{{selectedCount}}件</text>
+      <view class="select-all-wrapper">
+        <checkbox class="chk-all" checked="{{allChecked}}" bindchange="onToggleAll"/> 
+        <text class="all-text">全选</text>
+      </view>
+    </view>
+    <button class="delete-btn" bindtap="onBatchDelete">删除</button>
   </view>
 </view>
 

@@ -1,8 +1,4 @@
-page { 
-  height: 100vh; 
-  background: #F8F9FA;
-  overflow: hidden;
-}
+/* 页面容器样式 - 不使用page标签选择器 */
 
 .page-wrapper {
   width: 100%;
@@ -21,10 +17,13 @@ page {
 .topbar { 
   position: relative;
   background: #FFF; 
-  border-bottom: 1px solid #F2F2F7; 
+  border-bottom: 0px solid #F2F2F7; 
   z-index: 1100;
   box-sizing: border-box;
   flex-shrink: 0;
+  margin: 0 12px 8px;
+  border-radius: 8px;
+  border: 1px solid #F2F2F7;
 }
 
 /* 胶囊占位行：空的，只用来撑开高度 */
@@ -36,15 +35,17 @@ page {
 /* 内容行：头像、用户信息、编辑按钮（在胶囊下方） */
 .topbar-user-content {
   display: flex;
-  align-items: center; /* 横向中轴线对齐，头像和用户名水平居中对称 */
+  align-items: center;      /* ✅ 所有子元素在水平线上垂直居中 */
+  justify-content: space-between; /* 两端对齐 */
   gap: 12px;
-  padding: 8px 16px; /* 固定的左右 padding */
+  padding: 4px 16px;
 }
 
 .avatar-wrapper {
   width: 48px;
   height: 48px;
   flex-shrink: 0;
+  align-self: center;       /* 确保在flex容器中垂直居中 */
 }
 
 .topbar-avatar {
@@ -73,34 +74,41 @@ page {
 .topbar-user-info {
   display: flex;
   flex-direction: column;
-  justify-content: center; /* 保持文字容器在头像高度内居中 */
-  flex: 1; /* 占据剩余空间，将编辑按钮推到右侧 */
+  justify-content: center;  /* 内部文字垂直居中 */
+  flex: 1;                  /* 占据剩余空间 */
   min-width: 0;
-  
-  /* ✨ 核心调整：向上平移 8px，弥补文字视觉中心的偏移 ✨ */
-  /* 针对 48px 的头像和 20px 的字体，向上平移 8px 达到最佳视觉效果 */
-  transform: translateY(-8px);
+  align-self: center;       /* ✅ 确保在flex容器中垂直居中 */
+  transform: none !important; /* ✅ 强制移除任何平移效果，让Flex接管 */
 }
 
 .topbar-nickname {
-  font-size: 20px; /* 加大字号，从17px改为20px */
+  font-size: 18px;
   font-weight: 600;
   color: #1D1D1F;
-  line-height: 1.2;
+  line-height: 1;           /* 行高设为1，保持紧凑 */
+  padding: 6px 0;          /* ✅ 上下各14px padding，总高度接近48px */
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  margin-bottom: 0;         /* 确保没有负面影响 */
+  /* transform: translateY(-1px); */ /* 如需微调，可启用 */
 }
 
 .topbar-nickname.login-hint {
-  color: #8E8E93; /* 灰色，提示未登录 */
+  color: #8E8E93;           /* 灰色，提示未登录 */
+  font-size: 18px;
   font-weight: 400;
+  line-height: 1;           /* 与正常状态保持一致 */
+  padding: 10px 0;          /* ✅ 保持与上面一致的padding */
 }
 
 .topbar-school {
-  font-size: 13px;
+  font-size: 12px;
   color: #8E8E93;
-  margin-top: 2px;
+  margin-top: 0px;          /* 顶部间距保持不变 */
+  margin-bottom: 6px;       /* ✅ 增加底部间距 */
+  line-height: 1.3;
+  padding: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -111,6 +119,8 @@ page {
   color: #2E5A9B;
   font-weight: 400;
   flex-shrink: 0;
+  line-height: 1;           /* 确保文字垂直居中 */
+  align-self: center;       /* 确保在flex容器中垂直居中 */
 }
 
 /* 滚动内容区 */
@@ -120,25 +130,90 @@ page {
   width: 100%;
 }
 
-.section { background:#FFF; margin-top:12px; padding:12px 8px; }
-.section-title { font-size:14px; color:#8E8E93; padding:0 8px 8px; }
-.section-header { display:flex; align-items:center; justify-content:space-between; padding:0 8px 8px; }
-.section-more { display:flex; align-items:center; gap:4px; color:#8E8E93; font-size:12px; }
-.grid { display:flex; flex-wrap:wrap; }
-.grid-item { width:25%; display:flex; flex-direction:column; align-items:center; padding:16px 0; }
-.count { font-size:20px; font-weight:600; color:#1D1D1F; margin-bottom:6px; }
-.label { font-size:12px; color:#1D1D1F; }
+.section { 
+  background: #FFF; 
+  margin: 0 12px 8px; 
+  padding: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #F2F2F7;
+}
+.section-title { 
+  font-size: 13px !important; 
+  color: #8E8E93 !important; 
+  padding: 10px 16px 6px !important;
+  font-weight: 400 !important;
+  line-height: 1.2 !important;
+}
+.section-header { 
+  display: flex; 
+  align-items: center; 
+  justify-content: space-between; 
+  padding: 10px 16px 6px;
+}
+.section-header .section-title {
+  padding: 0 !important;
+  font-size: 13px !important;
+  color: #8E8E93 !important;
+  font-weight: 400 !important;
+  line-height: 1.2 !important;
+}
+.section-more { 
+  display:flex; 
+  align-items:center; 
+  justify-content:center;
+  gap:4px; 
+  color:#8E8E93; 
+  font-size:12px; 
+  white-space:nowrap; 
+  flex-shrink:0; 
+  padding: 12px 16px;       /* ✅ 更大的内边距，扩大可点击区域 */
+  margin: -12px -16px;      /* ✅ 负边距抵消padding，保持视觉位置不变 */
+  cursor: pointer;
+  transition: opacity 0.2s;
+  min-width: 44px;          /* ✅ 最小宽度44px，符合可点击性设计 */
+  min-height: 44px;         /* ✅ 最小高度44px */
+}
+
+.section-more:active {
+  opacity: 0.5;             /* 点击时半透明反馈 */
+}
+
+.section-more .arrow {
+  font-size: 18px;          /* 箭头稍大一点 */
+  color: #C7C7CC;
+  line-height: 1;
+}
+.grid { 
+  display: flex; 
+  flex-wrap: wrap; 
+  padding: 4px 0 6px;
+}
+.grid-item { 
+  width: 25%; 
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  padding: 8px 0;
+}
+.count { 
+  font-size: 18px; 
+  font-weight: 600; 
+  color: #1D1D1F; 
+  margin-bottom: 2px;
+}
+.label { 
+  font-size: 12px; 
+  color: #8E8E93;
+}
 
 /* 租赁信息导航 */
 .rental-nav {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  padding: 12px 4px;
-  background: linear-gradient(135deg, #F8F9FA 0%, #F3F4F6 100%);
-  border-radius: 8px;
-  margin: 0 8px 16px;
-  border: 1px solid #E5E7EB;
+  padding: 4px 8px 8px;
+  background: #FFFFFF;
 }
 
 .rental-nav-item {
@@ -146,9 +221,11 @@ page {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 10px 6px;
-  position: relative;  /* 为气泡定位 */
+  padding: 2px 2px;
+  position: relative;
   transition: all 0.3s ease;
+  min-width: 0;
+  max-width: 80px;
 }
 
 .rental-nav-item::after {
@@ -171,25 +248,28 @@ page {
 }
 
 .nav-item-text {
-  font-size: 13px;
+  font-size: 12px;          /* 从13px减小到12px */
   color: #1D1D1F;
   font-weight: 500;
   text-align: center;
-  white-space: nowrap;
+  white-space: nowrap;      /* 强制不换行 */
+  flex-shrink: 0;           /* 不压缩 */
 }
 
 /* 订单数量（黑色文字） */
 .order-count {
   color: #333;
-  font-size: 13px;
+  font-size: 11px;          /* 从13px减小到11px */
   font-weight: 400;
   margin-left: 2px;
+  white-space: nowrap;      /* 不换行 */
+  flex-shrink: 0;           /* 不压缩 */
 }
 
 .trade-grid { 
   display: flex; 
   justify-content: space-around; 
-  padding: 12px 16px; 
+  padding: 10px 12px; 
   gap: 4px;
 }
 
@@ -198,7 +278,7 @@ page {
   display: flex; 
   flex-direction: column; 
   align-items: center; 
-  padding: 6px 2px;
+  padding: 4px 2px;
   max-width: 70px;
   min-width: 50px;
 }
@@ -222,6 +302,13 @@ page {
   object-fit: contain;
 }
 
+
+
+.trade-icon-bg.hosting .trade-icon-img {
+  width: 42px;
+  height: 42px;
+}
+
 .trade-text { 
   font-size: 11px; 
   color: #1D1D1F;
@@ -234,24 +321,75 @@ page {
   max-width: 100%;
 }
 
-.arrow { color:#8E8E93; }
+.arrow { color:#8E8E93;font-size:18px;margin-right:4px }
 
 /* 更多服务 */
-.service-list { padding:8px 0; }
-.service-item { display:flex; justify-content:space-between; align-items:center; padding:12px 16px; background:#FFF; border-bottom:1px solid #F7F7F7; }
-.service-item:last-child { border-bottom:none; }
-.service-label { font-size:12px; color:#1D1D1F; }
-.service-arrow { font-size:18px; color:#C7C7CC; }
+.service-list { 
+  padding: 0;
+}
+.service-item { 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+  padding: 14px 16px; 
+  background: #FFF; 
+  border-bottom: 1px solid #F2F2F7;
+}
+.service-item:last-child { 
+  border-bottom: none;
+}
+.service-label { 
+  font-size: 14px; 
+  color: #1D1D1F;
+}
+.service-arrow { 
+  font-size: 14px; 
+  color: #C7C7CC;
+}
 
 /* 底部占位，防止被导航栏遮挡 */
 .bottom-placeholder {
-  height: calc(60px + env(safe-area-inset-bottom));
+  height: calc(190px + env(safe-area-inset-bottom));  /* ✅ 增加到120px，确保所有内容可见 */
   flex-shrink: 0;
 }
 
 .bottom-nav { position: fixed; left: 0; right: 0; bottom: 0; background: #FFF; border-top: 1px solid #F3F4F6; display:flex; align-items:center; padding:2px 4px; padding-bottom: calc(env(safe-area-inset-bottom) / 2 + 2px); z-index: 1000; }
 .nav-item { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; }
-.nav-icon-img { width:24px; height:24px; margin-bottom:4px; display:block; }
+.nav-icon-img { width:24px; height:24px; margin-bottom:4px; display:block; object-fit:contain; }
 .nav-text { font-size:12px; color:#8E8E93; }
 .nav-item.active .nav-text { color:#4A6FA5; }
+
+/* 退出登录按钮 */
+.logout-container {
+  padding: 20px 12px 32px;
+  background: #F8F9FA;
+  display: flex;
+  justify-content: center;
+}
+
+.logout-btn {
+  width: auto;
+  min-width: 120px;
+  height: 38px;
+  padding: 0 24px;
+  background: #FFFFFF;
+  color: #FF3B30;
+  font-size: 14px;
+  font-weight: 400;
+  border-radius: 19px;
+  border: 1px solid #FF3B30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.logout-btn::after {
+  border: none;
+}
+
+.logout-btn:active {
+  opacity: 0.7;
+  background: #FFF1F0;
+}
 

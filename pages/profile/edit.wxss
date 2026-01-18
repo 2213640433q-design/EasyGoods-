@@ -1,14 +1,14 @@
 page, .page { 
   min-height: 100vh; 
   height: 100vh;
-  background: #F8F9FA; 
+  background: #FFFFFF;
   display: flex;
   flex-direction: column;
 }
 
 .topbar {
   position: relative;
-  background: #FFF;
+  background: #FFFFFF;
   border-bottom: 1px solid #F2F2F7;
   z-index: 1100;
   box-sizing: border-box;
@@ -38,7 +38,7 @@ page, .page {
 }
 
 .back-icon {
-  font-size: 24px;
+  font-size: 28px;
   color: #1D1D1F;
   font-weight: 300;
 }
@@ -56,25 +56,61 @@ page, .page {
   flex: 1;
   height: 100%;
   width: 100%;
+  position: relative;
+  z-index: 10;
 }
 
-/* 分组标题 */
-.section-header {
-  padding: 20px 16px 8px;
-  background: #F8F9FA;
-}
-
-.section-title {
-  font-size: 13px;
-  color: #8E8E93;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.form-container {
-  background: #FFF;
+/* 头像卡片 */
+.avatar-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 0 20px;
   margin-bottom: 12px;
+  background: #FFFFFF;
+}
+
+.avatar-container {
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+
+.main-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 40px;
+  border: 1px solid #E5E5EA;
+  background: #FFFFFF;
+}
+
+.avatar-edit-badge {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 20px;
+  height: 20px;
+  background: #FFFFFF;
+  border-radius: 10px;
+  border: 1px solid #E5E5EA;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+.edit-icon {
+  font-size: 10px;
+  filter: grayscale(100%) brightness(0);
+}
+
+/* 信息卡片 */
+.info-card {
+  background: #FFFFFF;
+  border-radius: 8px;
+  margin: 0 12px 12px;
+  overflow: hidden;
+  border: 1px solid #F2F2F7;
 }
 
 .form-item {
@@ -90,7 +126,7 @@ page, .page {
 }
 
 .label {
-  font-size: 16px;
+  font-size: 14px;
   color: #1D1D1F;
   font-weight: 400;
 }
@@ -102,7 +138,7 @@ page, .page {
 }
 
 .value {
-  font-size: 16px;
+  font-size: 14px;
   color: #8E8E93;
   max-width: 200px;
   overflow: hidden;
@@ -110,45 +146,96 @@ page, .page {
   white-space: nowrap;
 }
 
+.value.placeholder {
+  color: #C7C7CC;
+}
+
+.phone-number {
+  color: #8E8E93;
+}
+
 .arrow {
-  font-size: 16px;
+  font-size: 14px;
   color: #C7C7CC;
   font-weight: 300;
   flex-shrink: 0;
 }
 
-.avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 20px;
+/* 性别选择样式 */
+.gender-item {
+  padding: 12px 16px;
+}
+
+.gender-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.gender-btn {
+  flex: 1;
+  height: 26px;
+  min-width: 34px;
+  padding: 0 16px;
+  border-radius: 4px;
+  border: 1px solid #E5E5EA;
+  background: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.gender-btn.active {
+  background: #4A6FA5;
+  border-color: #4A6FA5;
+}
+
+.gender-text {
+  font-size: 12px;
+  color: #1D1D1F;
+  font-weight: 400;
+}
+
+.gender-btn.active .gender-text {
+  color: #FFFFFF;
 }
 
 /* 退出登录按钮容器 */
 .logout-container {
-  padding: 24px 16px;
-  background: #F8F9FA;
+  padding: 20px 12px 32px;
+  background: #FFFFFF;
+  display: flex;
+  justify-content: center;
 }
 
 .logout-btn {
-  width: 100%;
-  height: 50px;
-  background: #FFF;
+  width: auto;
+  min-width: 120px;
+  height: 38px;
+  padding: 0 24px;
+  background: #FFFFFF;
   color: #FF3B30;
-  font-size: 16px;
-  font-weight: 600;
-  border-radius: 25px;
+  font-size: 14px;
+  font-weight: 400;
+  border-radius: 19px;
   border: 1px solid #FF3B30;
-  box-shadow: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: all 0.3s ease;
 }
 
+.logout-btn::after {
+  border: none;
+}
+
 .logout-btn:active {
-  opacity: 0.6;
+  opacity: 0.7;
   background: #FFF1F0;
 }
 
 /* 底部占位 */
 .bottom-placeholder {
-  height: 20px;
+  height: 40px;
   flex-shrink: 0;
 }

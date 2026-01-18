@@ -1,6 +1,7 @@
 {
   "pages": [
     "pages/index/index",
+    "pages/login/index",
     "pages/profile/index",
     "pages/profile/edit"
   ],
@@ -36,6 +37,18 @@
     {
       "root": "pages/store",
       "pages": ["login", "home", "scan", "order-detail"]
+    },
+    {
+      "root": "pages/admin",
+      "pages": ["product-images"]
+    },
+    {
+      "root": "pages/customer-service",
+      "pages": ["index"]
+    },
+    {
+      "root": "pages/hosting",
+      "pages": ["submit/index", "manage/index"]
     }
   ],
   "preloadRule": {

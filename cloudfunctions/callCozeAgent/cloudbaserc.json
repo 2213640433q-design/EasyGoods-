@@ -1,0 +1,11 @@
+{
+  "functionRoot": "./",
+  "functions": [
+    {
+      "name": "callCozeAgent",
+      "timeout": 20,
+      "runtime": "Nodejs16.13"
+    }
+  ]
+}
+

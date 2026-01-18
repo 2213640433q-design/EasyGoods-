@@ -1,0 +1,321 @@
+<!-- 闲置托管提交页面 -->
+<view class="page">
+  <!-- 顶部导航栏 -->
+  <view class="navbar" style="padding-top: {{statusBarHeight}}px;">
+    <view class="nav-content">
+      <view class="nav-back" bindtap="goBack">
+        <text class="back-icon">‹</text>
+      </view>
+      <view class="nav-title">添加托管设备</view>
+      <view class="nav-placeholder"></view>
+    </view>
+  </view>
+
+  <scroll-view class="content" scroll-y style="padding-top: {{totalNavHeight}}px;">
+    <!-- 步骤指示器 -->
+    <view class="steps-indicator">
+      <view class="step-item {{currentStep >= 1 ? 'active' : ''}} {{currentStep > 1 ? 'completed' : ''}}">
+        <view class="step-number">
+          <text wx:if="{{currentStep > 1}}">✓</text>
+          <text wx:else>1</text>
+        </view>
+        <text class="step-text">选择类型</text>
+        <view class="step-line {{currentStep > 1 ? 'active' : ''}}"></view>
+      </view>
+      <view class="step-item {{currentStep >= 2 ? 'active' : ''}} {{currentStep > 2 ? 'completed' : ''}}">
+        <view class="step-number">
+          <text wx:if="{{currentStep > 2}}">✓</text>
+          <text wx:else>2</text>
+        </view>
+        <text class="step-text">设备信息</text>
+        <view class="step-line {{currentStep > 2 ? 'active' : ''}}"></view>
+      </view>
+      <view class="step-item {{currentStep >= 3 ? 'active' : ''}}">
+        <view class="step-number">3</view>
+        <text class="step-text">租金设置</text>
+        <!-- 最后一步不需要连接线 -->
+      </view>
+    </view>
+
+    <!-- 步骤1：选择设备类型 -->
+    <view class="step-content" wx:if="{{currentStep === 1}}">
+      <view class="section-card">
+        <view class="card-title">选择设备类型</view>
+        <view class="category-selector">
+          <view class="category-label">一级分类</view>
+          <view class="sub-category-list">
+            <view class="sub-category-item selected">
+              <text class="category-text">📷 摄影</text>
+            </view>
+          </view>
+        </view>
+        
+        <view class="category-selector">
+          <view class="category-label">二级分类</view>
+          <view class="sub-category-list">
+            <view class="sub-category-item {{formData.subCategory === 'CCD' ? 'selected' : ''}}" 
+                  bindtap="selectSubCategory" data-category="CCD">
+              <text class="category-text">CCD 相机</text>
+            </view>
+            <view class="sub-category-item {{formData.subCategory === '运动相机' ? 'selected' : ''}}" 
+                  bindtap="selectSubCategory" data-category="运动相机">
+              <text class="category-text">运动相机</text>
+            </view>
+            <view class="sub-category-item {{formData.subCategory === '单反' ? 'selected' : ''}}" 
+                  bindtap="selectSubCategory" data-category="单反">
+              <text class="category-text">单反相机</text>
+            </view>
+            <view class="sub-category-item {{formData.subCategory === '投影仪' ? 'selected' : ''}}" 
+                  bindtap="selectSubCategory" data-category="投影仪">
+              <text class="category-text">投影仪</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <view class="bottom-bar">
+        <button class="btn-primary" bindtap="nextStep" disabled="{{!formData.subCategory}}">
+          下一步
+        </button>
+      </view>
+    </view>
+
+    <!-- 步骤2：填写设备信息 -->
+    <view class="step-content" wx:if="{{currentStep === 2}}">
+      <!-- 基础信息 -->
+      <view class="section-card">
+        <view class="card-title">基础信息</view>
+        
+        <view class="form-item">
+          <view class="label">设备名称<text class="required">*</text></view>
+          <input class="input" placeholder="如：Sony A7III" value="{{formData.deviceName}}" bindinput="onInputChange" data-field="deviceName"/>
+        </view>
+
+        <view class="form-item">
+          <view class="label">设备副标题</view>
+          <input class="input" placeholder="如：人文摄影神器（可选）" value="{{formData.subtitle}}" bindinput="onInputChange" data-field="subtitle"/>
+        </view>
+
+        <view class="form-item">
+          <view class="label">设备原价<text class="required">*</text></view>
+          <view class="input-with-unit">
+            <text class="unit">£</text>
+            <input class="input" type="digit" placeholder="购买时的价格" value="{{formData.originalPrice}}" bindinput="onInputChange" data-field="originalPrice"/>
+          </view>
+        </view>
+
+        <view class="form-item">
+          <view class="label">购买时间</view>
+          <picker mode="date" value="{{formData.purchaseDate}}" bindchange="onDateChange">
+            <view class="picker">
+              {{formData.purchaseDate || '请选择（可选）'}}
+            </view>
+          </picker>
+        </view>
+
+        <view class="form-item">
+          <view class="label">使用状况<text class="required">*</text></view>
+          <view class="condition-list">
+            <view class="condition-item {{formData.condition === item ? 'selected' : ''}}" 
+                  wx:for="{{conditionOptions}}" 
+                  wx:key="index"
+                  bindtap="selectCondition" 
+                  data-condition="{{item}}">
+              {{item}}
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 规格参数 -->
+      <view class="section-card">
+        <view class="card-title">
+          <text>规格参数</text>
+          <text class="subtitle">（建议填写）</text>
+        </view>
+        <view class="tip-text">详细的参数信息有助于提高出租率</view>
+        
+        <textarea class="textarea" placeholder="请输入设备的规格参数，如：&#10;传感器：全画幅 CMOS&#10;像素：2420万&#10;ISO范围：100-51200&#10;视频：4K 30fps" value="{{formData.deviceParams}}" bindinput="onInputChange" data-field="deviceParams" maxlength="500"/>
+        <view class="char-count">{{formData.deviceParams.length}}/500</view>
+      </view>
+
+      <!-- 配件清单 -->
+      <view class="section-card">
+        <view class="card-title">
+          <text>配件清单</text>
+          <text class="required">*</text>
+        </view>
+        
+        <view class="accessories-checklist">
+          <label class="accessory-item" wx:for="{{accessoryOptions}}" wx:key="name">
+            <checkbox value="{{item.name}}" checked="{{item.checked}}" bindtap="toggleAccessory" data-index="{{index}}"/>
+            <text class="accessory-text">{{item.name}}</text>
+            <input wx:if="{{item.hasQuantity && item.checked}}" class="quantity-input" type="number" placeholder="数量" value="{{item.quantity}}" bindinput="onAccessoryQuantityChange" data-index="{{index}}"/>
+          </label>
+          
+          <view class="custom-accessory">
+            <input class="input" placeholder="其他配件（用逗号分隔）" value="{{formData.customAccessories}}" bindinput="onInputChange" data-field="customAccessories"/>
+          </view>
+        </view>
+      </view>
+
+      <!-- 照片上传 -->
+      <view class="section-card">
+        <view class="card-title">
+          <text>设备照片</text>
+          <text class="required">*</text>
+          <text class="subtitle">（1-6张）</text>
+        </view>
+        
+        <view class="image-upload-grid">
+          <view class="image-item" wx:for="{{formData.images}}" wx:key="index">
+            <image class="uploaded-image" src="{{item}}" mode="aspectFill" bindtap="previewImage" data-url="{{item}}"/>
+            <view class="image-delete" bindtap="deleteImage" data-index="{{index}}">×</view>
+          </view>
+          <view class="image-upload-btn" wx:if="{{formData.images.length < 6}}" bindtap="chooseImages">
+            <text class="upload-icon">+</text>
+            <text class="upload-text">添加照片</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 拍摄样片 -->
+      <view class="section-card">
+        <view class="card-title">
+          <text>拍摄样片</text>
+          <text class="subtitle">（建议3-6张）</text>
+        </view>
+        <view class="tip-text">用该设备拍摄的照片，可提升出租率50%+</view>
+        
+        <view class="image-upload-grid">
+          <view class="image-item" wx:for="{{formData.sampleImages}}" wx:key="index">
+            <image class="uploaded-image" src="{{item}}" mode="aspectFill" bindtap="previewSampleImage" data-url="{{item}}"/>
+            <view class="image-delete" bindtap="deleteSampleImage" data-index="{{index}}">×</view>
+          </view>
+          <view class="image-upload-btn" wx:if="{{formData.sampleImages.length < 6}}" bindtap="chooseSampleImages">
+            <text class="upload-icon">+</text>
+            <text class="upload-text">添加样片</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 设备说明 -->
+      <view class="section-card">
+        <view class="card-title">设备说明</view>
+        <textarea class="textarea" placeholder="请描述设备的使用状况、特殊说明等（可选）" value="{{formData.description}}" bindinput="onInputChange" data-field="description" maxlength="500"/>
+        <view class="char-count">{{formData.description.length}}/500</view>
+      </view>
+
+      <view class="bottom-bar">
+        <button class="btn-secondary" bindtap="prevStep">上一步</button>
+        <button class="btn-primary" bindtap="nextStep" disabled="{{!isStep2Valid}}">下一步</button>
+      </view>
+    </view>
+
+    <!-- 步骤3：租金设置 -->
+    <view class="step-content" wx:if="{{currentStep === 3}}">
+      <!-- 押金设置 -->
+      <view class="section-card">
+        <view class="card-title">押金设置<text class="required">*</text></view>
+        
+        <view class="deposit-options">
+          <view class="deposit-option {{formData.depositRatio === 100 ? 'selected' : ''}}" bindtap="selectDepositRatio" data-ratio="100">
+            <view class="option-header">
+              <text class="option-title">100% 全额押金</text>
+              <text class="recommend-tag" wx:if="{{formData.depositRatio === 100}}">推荐</text>
+            </view>
+            <text class="option-amount">£{{depositAmount100}}</text>
+            <text class="option-tip">信任度高，出租率更好</text>
+          </view>
+
+          <view class="deposit-option {{formData.depositRatio === 80 ? 'selected' : ''}}" bindtap="selectDepositRatio" data-ratio="80">
+            <view class="option-header">
+              <text class="option-title">80% 押金</text>
+            </view>
+            <text class="option-amount">£{{depositAmount80}}</text>
+            <text class="option-tip">平衡选择</text>
+          </view>
+
+          <view class="deposit-option {{formData.depositRatio === 70 ? 'selected' : ''}}" bindtap="selectDepositRatio" data-ratio="70">
+            <view class="option-header">
+              <text class="option-title">70% 押金</text>
+            </view>
+            <text class="option-amount">£{{depositAmount70}}</text>
+            <text class="option-tip">降低租赁门槛，可能提高出租率</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 系统建议租金 -->
+      <view class="section-card" wx:if="{{suggestedRent.min}}">
+        <view class="card-title">💰 系统建议租金</view>
+        
+        <view class="rent-suggestion">
+          <view class="rent-item">
+            <text class="rent-label">日租</text>
+            <text class="rent-range">£{{suggestedRent.min}} - £{{suggestedRent.max}}</text>
+          </view>
+          <view class="rent-item">
+            <text class="rent-label">2日租</text>
+            <text class="rent-range">£{{suggestedRent.min2Days}} - £{{suggestedRent.max2Days}}</text>
+          </view>
+          <view class="rent-item">
+            <text class="rent-label">3日租</text>
+            <text class="rent-range">£{{suggestedRent.min3Days}} - £{{suggestedRent.max3Days}}</text>
+          </view>
+        </view>
+        
+        <view class="rent-recommendation">
+          💡 建议日租金：£{{suggestedRent.recommended}}/天
+        </view>
+      </view>
+
+      <!-- 租金设置 -->
+      <view class="section-card">
+        <view class="card-title">设置您的租金<text class="required">*</text></view>
+        
+        <view class="form-item">
+          <view class="label">日租金</view>
+          <view class="input-with-unit">
+            <text class="unit">£</text>
+            <input class="input" type="digit" placeholder="建议 {{suggestedRent.recommended}}" value="{{formData.dailyRent}}" bindinput="onInputChange" data-field="dailyRent"/>
+            <text class="unit">/天</text>
+          </view>
+          <view class="hint" wx:if="{{rentError}}">
+            <text class="error-text">{{rentError}}</text>
+          </view>
+          <view class="hint" wx:else>
+            <text class="hint-text">建议范围：£{{suggestedRent.min}} - £{{suggestedRent.max}}</text>
+          </view>
+        </view>
+
+        <view class="calc-result" wx:if="{{formData.dailyRent}}">
+          <view class="result-item">
+            <text class="result-label">2日租金</text>
+            <text class="result-value">£{{calculated2DayRent}}</text>
+          </view>
+          <view class="result-item">
+            <text class="result-label">3日租金</text>
+            <text class="result-value">£{{calculated3DayRent}}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 收益预估 -->
+      <view class="section-card revenue-forecast" wx:if="{{formData.dailyRent}}">
+        <view class="card-title">📊 收益预估</view>
+        <view class="forecast-text">
+          假设月出租率30%，预计月收益：
+          <text class="revenue-amount">£{{estimatedMonthRevenue}}</text>
+        </view>
+        <view class="forecast-note">*实际收益根据出租情况而定，平台收取10%服务费</view>
+      </view>
+
+      <view class="bottom-bar">
+        <button class="btn-secondary" bindtap="prevStep">上一步</button>
+        <button class="btn-primary" bindtap="submitForReview" disabled="{{!isStep3Valid}}">提交审核</button>
+      </view>
+    </view>
+  </scroll-view>
+</view>
+

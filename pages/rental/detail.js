@@ -4,7 +4,7 @@ Page({
     navBarHeight: 44,
     product: {},
     currentImageIndex: 0,
-    currentTab: 0, // 0:拍摄样片 1:产品介绍
+    currentTab: 0, // 0:拍摄样片 1:产品介绍 2:租赁须知
     
     // 租期选项
     rentalOptions: [
@@ -29,8 +29,33 @@ Page({
     
     // 租赁滑窗相关
     showRentalSheet: false,
-    pickupLocations: ['伦敦店', '南安普顿店', '格拉斯哥店', '爱丁堡店'],
-    selectedPickupIndex: 0,
+    
+    // 取货地点微信原生picker数据
+    pickupData: {
+      '南安普顿': [
+        'Vincent Place, SO14 1JY',
+        'Vita Student Richmond House, SO14 3EU'
+      ],
+      '格拉斯哥': [
+        'West Village, G12 0PJ'
+      ]
+    },
+    pickupColumns: [
+      ['南安普顿', '格拉斯哥'],  // 第一列：城市
+      ['Vincent Place, SO14 1JY', 'Vita Student Richmond House, SO14 3EU']  // 第二列：公寓（默认显示南安普顿的）
+    ],
+    pickupValue: [0, 0],  // 默认选中第一个城市的第一个公寓
+    selectedPickupLocation: '',  // 显示的完整地址
+    
+    // 取货时间选择器（日期+小时+分钟）
+    pickupTimeColumns: [
+      ['请先选择租赁时间'],  // 第一列：日期（根据租赁起始日期动态更新）
+      ['09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21'],  // 第二列：小时
+      ['00', '15', '30', '45']  // 第三列：分钟
+    ],
+    pickupTimeValue: [0, 5, 0],  // 默认选中：日期0，14时，00分
+    pickupTimeDisplay: '',  // 显示的完整时间
+    
     rentalStartDate: '',
     rentalEndDate: '',
     rentalDays: 0,
@@ -52,7 +77,9 @@ Page({
     calendarDays: 0,
     selectingStartDate: true,
     // 收藏状态
-    collected: false
+    collected: false,
+    // 租期计算说明弹窗
+    showPriceDetail: false
   },
 
   onLoad(options) {
@@ -304,6 +331,7 @@ Page({
         comparisonImages: [
           'https://images.unsplash.com/photo-1606390289279-c4e71fbb96e8?w=800&h=600&fit=crop'
         ],
+        introImage: 'https://images.unsplash.com/photo-1606390289279-c4e71fbb96e8?w=800&h=1200&fit=crop',  /* ✅ 产品介绍长图 */
         sampleImages: [
           'https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=600&h=600&fit=crop',
           'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=600&h=600&fit=crop',
@@ -483,6 +511,86 @@ Page({
     })
   },
 
+  // 📍 picker列改变事件（切换城市时更新公寓列表）
+  onPickupColumnChange(e) {
+    const column = e.detail.column  // 哪一列改变了
+    const value = e.detail.value    // 改变后的值（当前列滚动到的索引）
+    
+    // 如果是第一列（城市）改变了
+    if (column === 0) {
+      const cities = this.data.pickupColumns[0]
+      const selectedCity = cities[value]
+      const apartments = this.data.pickupData[selectedCity]
+      
+      // 重新构造整个 pickupColumns 数组
+      const newPickupColumns = [
+        this.data.pickupColumns[0],  // 第一列保持不变
+        apartments || []  // 第二列更新为新的公寓列表
+      ]
+      
+      // 重新构造 pickupValue 数组
+      const newPickupValue = [
+        value,  // 第一列使用新滚动到的值
+        0  // 第二列重置为第一个
+      ]
+      
+      // 更新数据
+      this.setData({
+        pickupColumns: newPickupColumns,
+        pickupValue: newPickupValue
+      })
+      
+      console.log('🏙️ 城市切换至:', selectedCity, '→ 公寓列表:', apartments)
+    }
+  },
+
+  // 📍 确认选择取货地点
+  onPickupChange(e) {
+    const value = e.detail.value  // [cityIndex, apartmentIndex]
+    const cityIndex = value[0]
+    const apartmentIndex = value[1]
+    
+    const city = this.data.pickupColumns[0][cityIndex]
+    const apartment = this.data.pickupColumns[1][apartmentIndex]
+    
+    // 格式：城市, 公寓名称, 邮编
+    const fullLocation = `${city}, ${apartment}`
+    
+    this.setData({
+      pickupValue: value,
+      selectedPickupLocation: fullLocation
+    })
+    
+    console.log('✅ 已选择取货地点:', fullLocation)
+  },
+
+  // 🕐 选择取货时间
+  onPickupTimeChange(e) {
+    const value = e.detail.value  // [dateIndex, hourIndex, minuteIndex]
+    
+    // 检查是否已选择租赁日期
+    if (!this.data.rentalStartDate) {
+      wx.showToast({
+        title: '请先选择租赁时间',
+        icon: 'none'
+      })
+      return
+    }
+    
+    const date = this.data.pickupTimeColumns[0][value[0]]
+    const hour = this.data.pickupTimeColumns[1][value[1]]
+    const minute = this.data.pickupTimeColumns[2][value[2]]
+    
+    const timeDisplay = `${date} ${hour}:${minute}`
+    
+    this.setData({
+      pickupTimeValue: value,
+      pickupTimeDisplay: timeDisplay
+    })
+    
+    console.log('✅ 已选择取货时间:', timeDisplay)
+  },
+
   // 选择租期
   onRentalOptionTap(e) {
     this.setData({
@@ -513,6 +621,31 @@ Page({
       this.calculateTotalPrice()
     }
   },
+
+  // 联系客服
+  onContactService() {
+    const productId = this.data.product._id || this.data.product.id
+    wx.navigateTo({
+      url: `/pages/customer-service/index?productId=${productId}`
+    })
+  },
+
+  // 显示租期计算说明
+  showPriceDetail() {
+    this.setData({
+      showPriceDetail: true
+    })
+  },
+
+  // 隐藏租期计算说明
+  hidePriceDetail() {
+    this.setData({
+      showPriceDetail: false
+    })
+  },
+
+  // 阻止冒泡
+  stopPropagation() {},
 
   // 关闭滑窗
   closeRentalSheet() {
@@ -882,11 +1015,24 @@ Page({
     const diffTime = Math.abs(end - start)
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
     
+    // 更新取货时间选择器的日期列
+    const newPickupTimeColumns = [
+      [calendarStartDate],  // 第一列固定为租赁起始日期
+      this.data.pickupTimeColumns[1],  // 第二列：小时（保持不变）
+      this.data.pickupTimeColumns[2]   // 第三列：分钟（保持不变）
+    ]
+    
+    // 生成默认取货时间显示（起始日期 14:00）
+    const defaultPickupTimeDisplay = `${calendarStartDate} 14:00`
+    
     this.setData({
       rentalStartDate: calendarStartDate,
       rentalEndDate: calendarEndDate,
       rentalDays: diffDays,
-      showCalendar: false
+      showCalendar: false,
+      pickupTimeColumns: newPickupTimeColumns,
+      pickupTimeValue: [0, 5, 0],  // 重置为默认时间（起始日期 14:00）
+      pickupTimeDisplay: defaultPickupTimeDisplay
     })
     
     this.calculateTotalPrice()
@@ -901,7 +1047,14 @@ Page({
       rentalStartDate: '',
       rentalEndDate: '',
       rentalDays: 0,
-      selectingStartDate: true
+      selectingStartDate: true,
+      // 重置取货时间
+      pickupTimeColumns: [
+        ['请先选择租赁时间'],
+        this.data.pickupTimeColumns[1],
+        this.data.pickupTimeColumns[2]
+      ],
+      pickupTimeDisplay: ''
     })
     this.generateCalendar()
     wx.showToast({ title: '已重置选择', icon: 'success', duration: 1500 })

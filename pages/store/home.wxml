@@ -8,14 +8,6 @@
     <view class="nav-right"></view>
   </view>
 
-  <!-- 一键扫码按钮 -->
-  <view class="scan-bar">
-    <button class="scan-btn" bindtap="onQuickScan">
-      <text class="scan-btn-icon">📷</text>
-      <text class="scan-btn-text">一键扫码</text>
-    </button>
-  </view>
-
   <!-- 筛选栏（独立横向滚动） -->
   <scroll-view class="filter-scroll" scroll-x>
     <view class="filter-bar">
@@ -75,5 +67,10 @@
       </view>
     </view>
   </scroll-view>
+
+  <!-- 底部中间扫码按钮 -->
+  <view class="floating-scan-btn" bindtap="onQuickScan">
+    <image class="scan-icon-img" src="/static/icons/scan.svg" mode="aspectFit"></image>
+  </view>
 </view>
 

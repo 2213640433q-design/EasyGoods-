@@ -121,7 +121,7 @@ page {
 /* 搜索栏样式 */
 .search-section {
   background-color: #FFFFFF;
-  padding: 12px 16px;
+  padding: 4px 12px;
 }
 
 .search-container {
@@ -131,26 +131,26 @@ page {
 .search-input {
   position: relative;
   background-color: #F8F9FA;
-  border-radius: 20px;
-  height: 40px;
+  border-radius: 18px;      /* 圆角稍小 */
+  height: 28px;             /* ✅ 从40px减小到34px */
   display: flex;
   align-items: center;
-  padding: 10px 16px 10px 38px;
-  border: 1px solid #F2F2F7;
+  padding: 6px 14px 6px 34px;  /* 内边距也相应调整 */
+  border: 0px solid #F2F2F7;
 }
 
 .search-icon {
   position: absolute;
-  left: 12px;
-  width: 18px;
-  height: 18px;
+  left: 10px;               /* 稍微调整位置 */
+  width: 16px;              /* 图标稍小 */
+  height: 16px;
   top: 50%;
   transform: translateY(-50%);
 }
 
 .search-text {
   flex: 1;
-  font-size: 14px;
+  font-size: 13px;          /* ✅ 稍小的字体 */
   color: #000000;
   background: transparent;
   border: none;
@@ -159,14 +159,15 @@ page {
 /* 主导航栏 - 1行5列 */
 .main-nav-section {
   background: #FFF;
-  padding: 16px;
+  padding: 12px;
   margin-top: 8px;
 }
 
 .main-nav-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 12px;
+  display: flex;            /* 使用 Flex 布局替代 Grid */
+  flex-wrap: nowrap;        /* 禁止换行，强制保持一行 */
+  justify-content: space-around;  /* 均匀分布 */
+  align-items: center;      /* 垂直居中 */
 }
 
 .main-nav-item {
@@ -174,6 +175,9 @@ page {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  flex: 1;                  /* 让5个元素自动平分空间 */
+  min-width: 0;             /* 防止内容撑开宽度 */
+  box-sizing: border-box;
   padding: 6px 2px;
   transition: all 0.3s ease;
 }
@@ -204,13 +208,14 @@ page {
   font-weight: 600;
 }
 
-.main-nav-item.disabled {
+/* 注释掉 disabled 样式，让"其他"分类颜色与其他一致 */
+/* .main-nav-item.disabled {
   opacity: 0.4;
 }
 
 .main-nav-item.disabled .main-nav-name {
   color: #C7C7CC;
-}
+} */
 
 /* 子分类tab - 横向滑动 */
 .sub-tabs-section {
@@ -237,7 +242,7 @@ page {
 .sub-tab {
   position: relative;
   display: inline-block;
-  padding: 12px 16px;
+  padding: 10px 16px;
   margin-right: 8px;
 }
 
@@ -266,22 +271,23 @@ page {
 
 /* 商品网格样式 */
 .products-section {
-  padding: 12px 16px;
-  padding-bottom: 80px;
+  padding: 6px 16px;
+  padding-bottom: calc(110px + env(safe-area-inset-bottom));  /* 动态底部间距，适配安全区域 */
 }
 
 .products-grid {
   display: flex;
   flex-wrap: wrap;
   margin: 0 -6px;
+  align-items: flex-start;  /* 顶部对齐，允许不同高度 */
 }
 
 .product-item {
   width: 50%;
   box-sizing: border-box;
-  padding: 0 6px 12px;
+  padding: 0 0px 12px;
   background-color: #FFFFFF;
-  border: 1px solid #F2F2F7;
+  border: 4px solid #F2F2F7;
   border-radius: 8px;
   box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.05);
   overflow: hidden;
@@ -290,31 +296,37 @@ page {
 .product-image-container {
   position: relative;
   width: 100%;
-  height: 141px;
+  height: 180px;  /* 从141px增加到180px，更高的视觉效果 */
 }
 
-.product-image { width: 100%; height: 100%; }
+.product-image { 
+  width: 100%; 
+  height: 100%; 
+  object-fit: cover;  /* 确保图片填满容器且不变形 */
+}
 
 .product-info {
-  padding: 10px;
+  padding: 10px 10px 4px 10px;  /* ✅ 底部6px，其他10px */
   display: flex;
   flex-direction: column;
 }
 
 .product-name {
-  font-size: 13px;
+  font-size: 14px;
   color: #1D1D1F;
   line-height: 1.5;
-  margin-bottom: 8px;
   overflow: hidden;
   text-overflow: ellipsis;
-  height: 39px;
-  white-space: normal;
+  display: -webkit-box;           /* 使用弹性盒子布局 */
+  -webkit-box-orient: vertical;   /* 垂直方向 */
+  -webkit-line-clamp: 2;          /* 最多显示2行 */
+  word-break: break-word;         /* 允许单词内换行 */
+  margin-bottom: 4px;             /* 与下方标签的间距 */
 }
 
 .product-tags {
   display: flex;
-  margin-bottom: 8px;
+  margin: 4px 0px 4px 0px;
 }
 
 .tag-main-category {
@@ -391,6 +403,7 @@ page {
   height: 24px; 
   margin-bottom: 4px; 
   display: block;
+  object-fit: contain;      /* ✅ 确保图片按比例缩放在24x24内 */
 }
 
 .nav-text {
